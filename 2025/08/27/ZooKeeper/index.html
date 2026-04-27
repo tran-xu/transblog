@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/transblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/transblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/transblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/transblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/transblog/css/main.css">
+
+
+<link rel="stylesheet" href="/transblog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trans-xu.github.io","root":"/transblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="功能Zookeeper 提供的主要功能包括：  配置管理 分布式锁 集群管理  数据模型ZooKeeper 是一个树形目录服务，和文件系统目录树很类似，拥有一个层次化结构。这里面的每一个节点都被称为： ZNode，每个节点上都会保存自己的数据和节点信息。节点可以拥有子节点，同时也允许少量（1MB）数据存储在该节点之下。节点可以分为四大类：  PERSISTENT     持久化节点 EPHEMER">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper">
+<meta property="og:url" content="https://trans-xu.github.io/transblog/2025/08/27/ZooKeeper/index.html">
+<meta property="og:site_name" content="一只萨摩耶的博客">
+<meta property="og:description" content="功能Zookeeper 提供的主要功能包括：  配置管理 分布式锁 集群管理  数据模型ZooKeeper 是一个树形目录服务，和文件系统目录树很类似，拥有一个层次化结构。这里面的每一个节点都被称为： ZNode，每个节点上都会保存自己的数据和节点信息。节点可以拥有子节点，同时也允许少量（1MB）数据存储在该节点之下。节点可以分为四大类：  PERSISTENT     持久化节点 EPHEMER">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/555070515252284.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/158591415270164.png">
+<meta property="article:published_time" content="2025-08-27T03:50:08.900Z">
+<meta property="article:modified_time" content="2025-08-27T03:36:11.989Z">
+<meta property="article:author" content="trans-xu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+
+<link rel="canonical" href="https://trans-xu.github.io/transblog/2025/08/27/ZooKeeper/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ZooKeeper | 一只萨摩耶的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/transblog/atom.xml" title="一只萨摩耶的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/transblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只萨摩耶的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员技术栈</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/transblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/transblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/transblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trans-xu.github.io/transblog/2025/08/27/ZooKeeper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/transblog/images/avatar.gif">
+      <meta itemprop="name" content="trans-xu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只萨摩耶的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ZooKeeper
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-27 11:36:11" itemprop="dateModified" datetime="2025-08-27T11:36:11+08:00">2025-08-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/transblog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/transblog/2025/08/27/ZooKeeper/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/transblog/2025/08/27/ZooKeeper/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><p>Zookeeper 提供的主要功能包括：</p>
+<ol>
+<li>配置管理</li>
+<li>分布式锁</li>
+<li>集群管理</li>
+</ol>
+<h1 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h1><p>ZooKeeper 是一个树形目录服务，和文件系统目录树很类似，拥有一个层次化结构。<br>这里面的每一个节点都被称为： ZNode，每个节点上都会保存自己的数据和节点信息。<br>节点可以拥有子节点，同时也允许少量（1MB）数据存储在该节点之下。<br>节点可以分为四大类：</p>
+<ol>
+<li>PERSISTENT     持久化节点</li>
+<li>EPHEMERAL     临时节点 ：-e</li>
+<li>PERSISTENT_SEQUENTIAL     持久化顺序节点 ：-s</li>
+<li>EPHEMERAL_SEQUENTIAL     临时顺序节点 ：-es</li>
+</ol>
+<h1 id="ZNode节点属性"><a href="#ZNode节点属性" class="headerlink" title="ZNode节点属性"></a>ZNode节点属性</h1><table>
+<thead>
+<tr>
+<th align="left">节点属性</th>
+<th align="left">注解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">cZxid</td>
+<td align="left">该数据节点被创建时的事务Id</td>
+</tr>
+<tr>
+<td align="left">mZxid</td>
+<td align="left">该数据节点被修改时最新的事物Id</td>
+</tr>
+<tr>
+<td align="left">pZxid</td>
+<td align="left">当前节点的父级节点事务Id</td>
+</tr>
+<tr>
+<td align="left">ctime</td>
+<td align="left">该数据节点创建时间</td>
+</tr>
+<tr>
+<td align="left">mtime</td>
+<td align="left">数据节点最后修改时间</td>
+</tr>
+<tr>
+<td align="left">dataVersion</td>
+<td align="left">当前节点版本号（每修改一次值+1递增）</td>
+</tr>
+<tr>
+<td align="left">cversion</td>
+<td align="left">子节点版本号（子节点修改次数，每修改一次值+1递增）</td>
+</tr>
+<tr>
+<td align="left">aclVersion</td>
+<td align="left">当前节点acl版本号（节点被修改acl权限，每修改一次值+1递增）</td>
+</tr>
+<tr>
+<td align="left">ephemeralOwner</td>
+<td align="left">临时节点标示，当前节点如果是临时节点，则存储的创建者的会话id（sessionId），如果不是，那么值&#x3D;0</td>
+</tr>
+<tr>
+<td align="left">dataLength</td>
+<td align="left">当前节点所存储的数据长度</td>
+</tr>
+<tr>
+<td align="left">numChildren</td>
+<td align="left">当前节点下子节点的个数</td>
+</tr>
+</tbody></table>
+<h1 id="分布式锁原理"><a href="#分布式锁原理" class="headerlink" title="分布式锁原理"></a>分布式锁原理</h1><p>zookeeper基于watcher机制和znode的有序节点，天生就是一个分布式锁的坯子。</p>
+<p>核心思想：当客户端要获取锁，则创建节点，使用完锁，则删除该节点。</p>
+<ol>
+<li>客户端获取锁时，在lock节点下创建临时顺序节点。</li>
+<li>然后获取lock下面的所有子节点，客户端获取到所有的子节点之后，如果发现自己创建的子节点序号最小，那么就认为该客户端获取到了锁。使用完锁后，将该节点删除。</li>
+<li>如果发现自己创建的节点并非lock所有子节点中最小的，说明自己还没有获取到锁，此时客户端需要找到比自己小的那个节点，同时对其注册事件监听器，监听删除事件。</li>
+<li>如果发现比自己小的那个节点被删除，则客户端的Watcher会收到相应通知，此时再次判断自己创建的节点是否是lock子节点中序号最小的，如果是则获取到了锁，如果不是则重复以上步骤继续获取到比自己小的一个节点并注册监听。</li>
+</ol>
+<p><img data-src="/transblog/images/435884609258196.png"></p>
+<ul>
+<li><p>首先创建一个&#x2F;test&#x2F;lock父节点作为一把锁，尽量是持久节点（PERSISTENT类型），每个尝试获取这把锁的客户端，在&#x2F;test&#x2F;lock父节点下创建临时顺序子节点。</p>
+</li>
+<li><p>由于序号的递增性，我们规定序号最小的节点即获得锁。例如：客户端来获取锁，在&#x2F;test&#x2F;lock节点下创建节点为&#x2F;test&#x2F;lock&#x2F;seq-00000001，它是最小的所以它优先拿到了锁，其它节点等待通知再次获取锁。&#x2F;test&#x2F;lock&#x2F;seq-00000001执行完自己的逻辑后删除节点释放锁。</p>
+</li>
+<li><p>那么节点&#x2F;test&#x2F;lock&#x2F;seq-00000002想要获取锁等谁的通知呢？这里让&#x2F;test&#x2F;lock&#x2F;seq-00000002节点监听&#x2F;test&#x2F;lock&#x2F;seq-00000001节点，一旦&#x2F;test&#x2F;lock&#x2F;seq-00000001节点删除，则通知&#x2F;test&#x2F;lock&#x2F;seq-00000002节点，让它再次判断自己是不是最小的节点，是则拿到锁，不是继续等通知。</p>
+</li>
+<li><p>以此类推&#x2F;test&#x2F;lock&#x2F;seq-00000003节点监听&#x2F;test&#x2F;lock&#x2F;seq-00000002节点，总是让后一个节点监听前一个节点，不用让所有节点都监听最小的节点，避免设置不必要的监听，以免造成大量无效的通知，形成“羊群效应”。</p>
+</li>
+</ul>
+<p><img data-src="/transblog/images/555070515252284.png"></p>
+<p>zookeeper分布式锁和redis分布式锁相比，因为大量的创建、删除节点性能上比较差，并不是很推荐。</p>
+<h1 id="羊群效应"><a href="#羊群效应" class="headerlink" title="羊群效应"></a>羊群效应</h1><p>分布式锁的普通实现：注册临时节点，谁注册成功谁获取锁，其他监听该节点的删除事件，一旦被删除，通知其他客户端，再次重复该流程；此为最简单的实现。</p>
+<p><strong>但这种情况下，大量客户端在短时间内对 ZooKeeper 服务器发起请求，可能超出了服务器的处理能力，导致延迟增加、响应时间变长，甚至导致服务不可用。</strong></p>
+<h1 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h1><p><img data-src="/transblog/images/158591415270164.png"></p>
+<ul>
+<li><p>集群配置： 一个 ZooKeeper 集群通常由多个 ZooKeeper 服务器组成，这些服务器分布在不同的物理节点上。在集群中，每个服务器都知道其他服务器的存在，并且彼此协调工作以提供一致性和可用性。</p>
+</li>
+<li><p>Leader 选举： 在 ZooKeeper 集群中，每个服务器可能处于三种状态之一：Leader、Follower 和 Observer。Leader 负责处理客户端的写请求，并将更新广播给其他服务器；而 Follower 和 Observer 则负责接收更新并复制数据。当一个 ZooKeeper 服务器启动或者 Leader 失效时，集群中的服务器会通过一种选举算法选出新的 Leader，以确保系统的可用性。</p>
+</li>
+<li><p>数据同步： ZooKeeper 使用 ZAB（ZooKeeper Atomic Broadcast）协议来确保数据的一致性和可靠性。当 Leader 收到写请求时，它会将请求转发给所有的 Follower，并等待大多数 Follower 确认写操作，然后再将写操作应用到本地状态。这种方式确保了数据的一致性，并且即使在部分服务器故障的情况下，系统仍然可以继续工作。</p>
+</li>
+<li><p>客户端访问： 客户端可以通过连接到任意一个 ZooKeeper 服务器来访问集群，一旦连接建立成功，客户端就可以向任意一个服务器发送读写请求。如果客户端连接的是 Follower 或 Observer，那么它会被重定向到 Leader，并在 Leader 上执行操作。</p>
+</li>
+<li><p>Watch 机制： ZooKeeper 提供了 Watch 机制，允许客户端在节点状态发生变化时接收通知。客户端可以在节点上设置 Watch，当节点的状态发生变化时，ZooKeeper 会向客户端发送通知，客户端可以据此执行相应的逻辑。</p>
+</li>
+</ul>
+<h2 id="ZAB"><a href="#ZAB" class="headerlink" title="ZAB"></a>ZAB</h2><p>Zookeeper 原子广播协议；ZAB 协议是为分布式协调服务 Zookeeper 专门设计的一种支持崩溃恢复和原子广播协议。</p>
+<p>在以下情况下，ZooKeeper 需要进行选举：</p>
+<ol>
+<li>Leader 故障： 当前的 Leader 出现故障或不可用时。</li>
+<li>新节点加入： 当新的 ZooKeeper 服务器加入集群时，新节点会参与选举，并且如果选举成功，它可能成为新的 Leader。</li>
+<li>集群初始化： 当第一个 ZooKeeper 服务器启动时，它会尝试成为 Leader。如果此时没有其他节点加入集群，那么它就会成为唯一的 Leader。</li>
+</ol>
+<ul>
+<li><p>选举权重：<br>Serverid：服务器ID。比如有三台服务器，编号分别是1,2,3。编号越大在选择算法中的权重越大。<br>Zxid：数据ID。服务器中存放的最大数据ID，值越大说明数据越新，在选举算法中数据越新权重越大。</p>
+</li>
+<li><p>节点角色：<br>Leader：Leader 负责处理客户端请求和状态变更，<br>Follower：Follower 则从 Leader 处同步状态</p>
+</li>
+<li><p>节点状态：<br>LOOKING，竞选状态。<br>FOLLOWING，随从状态，同步leader状态，参与投票。<br>OBSERVING，观察状态，同步leader状态，不参与投票。<br>LEADING，领导者状态。</p>
+</li>
+<li><p>选举过程：</p>
+</li>
+</ul>
+<ol>
+<li>当一个节点启动时，它首先会进入 LOOKING 状态，表示它正在寻找 Leader。</li>
+<li>在 LOOKING 状态下，节点会向其他节点发送消息，请求它们投票支持自己成为 Leader。</li>
+<li>如果收到了超过半数的选票，那么该节点就会成为 Leader，并将状态切换为 LEADING。</li>
+<li>如果一个节点在一定时间内没有收到足够多的投票或者发生了网络分区等情况，它会重新进入 LOOKING 状态，重新发起选举。</li>
+<li>在选举过程中，如果某个节点成为 Leader，那么其他节点会将自己的状态切换为 FOLLOWING，并开始与 Leader 同步数据。</li>
+</ol>
+<link rel="stylesheet" href="/transblog/css/spoiler.css" type="text/css"><script src="/transblog/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>给耶耶买杯咖啡喝</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/weixin_reward.jpg" alt="trans-xu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/zhifubao_reward.jpg" alt="trans-xu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/Top-K/" rel="prev" title="Top-K问题">
+      <i class="fa fa-chevron-left"></i> Top-K问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/" rel="next" title="系统监控-Prometheus">
+      系统监控-Prometheus <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD"><span class="nav-number">1.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">数据模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ZNode%E8%8A%82%E7%82%B9%E5%B1%9E%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">ZNode节点属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">分布式锁原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BE%8A%E7%BE%A4%E6%95%88%E5%BA%94"><span class="nav-number">5.</span> <span class="nav-text">羊群效应</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">6.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ZAB"><span class="nav-number">6.1.</span> <span class="nav-text">ZAB</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">trans-xu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/transblog/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/transblog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">trans-xu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">401k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:04</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/transblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/transblog/js/utils.js"></script>
+
+<script src="/transblog/js/motion.js"></script>
+
+
+<script src="/transblog/js/schemes/muse.js"></script>
+
+
+<script src="/transblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/transblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'yAoX6gn7GI1DLsEMuYu9H1Tn-gzGzoHsz',
+      appKey     : 'IYT4u4yNOKXWtyvKYfcTgfKb',
+      placeholder: "留下你想说的",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

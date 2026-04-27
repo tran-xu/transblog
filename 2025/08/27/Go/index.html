@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/transblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/transblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/transblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/transblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/transblog/css/main.css">
+
+
+<link rel="stylesheet" href="/transblog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trans-xu.github.io","root":"/transblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="数据类型整型   类型 范围    uint8 0 到 255   uint16 0 到 65535   uint32 0 到 4294967295   unit64 (0 到 18446744073709551615)   int8 -128 到 127   int16 -32768 到 32767   int32 -2147483648 到 2147483647   int64 (-92233">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang">
+<meta property="og:url" content="https://trans-xu.github.io/transblog/2025/08/27/Go/index.html">
+<meta property="og:site_name" content="一只萨摩耶的博客">
+<meta property="og:description" content="数据类型整型   类型 范围    uint8 0 到 255   uint16 0 到 65535   uint32 0 到 4294967295   unit64 (0 到 18446744073709551615)   int8 -128 到 127   int16 -32768 到 32767   int32 -2147483648 到 2147483647   int64 (-92233">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/158593311250264.jpg">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/421481918247064.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/555091918267230.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/108562018259899.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/441184310256443.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/570304810276609.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/354290508469088.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/197016623769751.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/347984041280436.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/443236016183411.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/106235435019228.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/45536040005929.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/384867418122791.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/158188185122180.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/446725432389805.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/154056556979502.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/277420432971214.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/493744345367524.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/417872654956706.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/350634034397969.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/452795838973598.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/263045830266873.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/39155480225688.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/537903220496054.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/139063330680373.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/135235495380802.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/502093294335607.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/71224738016901.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/299987682086952.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/257604698885192.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/269295915250151.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/61650216268577.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/351170516256444.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/33920716276610.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/552064516279468.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/227274616277072.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/105724716274574.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/149224216261588.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/228075316255815.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/444010417273391.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/60135616278255.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/562090517266937.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/594141217250601.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/388160717260071.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/59261617253105.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/167183317254937.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/595612317262052.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/98652016269279.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/545232616265834.jpg">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/151565411250265.jpg">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/221024615256558.jpg">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/45341710255547.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/6754210264715.jpg">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/80344310254013.jpg">
+<meta property="article:published_time" content="2025-08-27T03:50:08.884Z">
+<meta property="article:modified_time" content="2025-08-27T03:34:24.500Z">
+<meta property="article:author" content="trans-xu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trans-xu.github.io/transblog/images/158593311250264.jpg">
+
+<link rel="canonical" href="https://trans-xu.github.io/transblog/2025/08/27/Go/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Golang | 一只萨摩耶的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/transblog/atom.xml" title="一只萨摩耶的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/transblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只萨摩耶的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员技术栈</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/transblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/transblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/transblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trans-xu.github.io/transblog/2025/08/27/Go/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/transblog/images/avatar.gif">
+      <meta itemprop="name" content="trans-xu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只萨摩耶的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Golang
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-27 11:34:24" itemprop="dateModified" datetime="2025-08-27T11:34:24+08:00">2025-08-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/transblog/categories/%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">语言</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/transblog/2025/08/27/Go/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/transblog/2025/08/27/Go/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>25k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>23 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">uint8</td>
+<td align="center">0 到 255</td>
+</tr>
+<tr>
+<td align="center">uint16</td>
+<td align="center">0 到 65535</td>
+</tr>
+<tr>
+<td align="center">uint32</td>
+<td align="center">0 到 4294967295</td>
+</tr>
+<tr>
+<td align="center">unit64</td>
+<td align="center">(0 到 18446744073709551615)</td>
+</tr>
+<tr>
+<td align="center">int8</td>
+<td align="center">-128 到 127</td>
+</tr>
+<tr>
+<td align="center">int16</td>
+<td align="center">-32768 到 32767</td>
+</tr>
+<tr>
+<td align="center">int32</td>
+<td align="center">-2147483648 到 2147483647</td>
+</tr>
+<tr>
+<td align="center">int64</td>
+<td align="center">(-9223372036854775808 到 9223372036854775807)</td>
+</tr>
+</tbody></table>
+<h2 id="浮点型–float"><a href="#浮点型–float" class="headerlink" title="浮点型–float"></a>浮点型–float</h2><p>float32、float64；分别表示单精度浮点数和双精度浮点数。</p>
+<h2 id="复数型–complex"><a href="#复数型–complex" class="headerlink" title="复数型–complex"></a>复数型–complex</h2><p>complex64、complex128；表示由实部和虚部组成的复数。</p>
+<h2 id="字符和字符串型–byte"><a href="#字符和字符串型–byte" class="headerlink" title="字符和字符串型–byte"></a>字符和字符串型–byte</h2><p>byte表示 0 到 255、string</p>
+<h2 id="错误类型–error"><a href="#错误类型–error" class="headerlink" title="错误类型–error"></a>错误类型–error</h2><p>error，表示错误信息的类型。</p>
+<h2 id="布尔型–bool"><a href="#布尔型–bool" class="headerlink" title="布尔型–bool"></a>布尔型–bool</h2><p>true或false</p>
+<h2 id="数组类型"><a href="#数组类型" class="headerlink" title="数组类型"></a>数组类型</h2><p>[n]T，表示固定长度的数组，其中 n 是数组的长度，T 是数组元素的类型。</p>
+<h2 id="切片类型"><a href="#切片类型" class="headerlink" title="切片类型"></a>切片类型</h2><p>[]T，表示可变长度的序列，其中 T 是切片元素的类型。</p>
+<h3 id="数组和切片区别"><a href="#数组和切片区别" class="headerlink" title="数组和切片区别"></a>数组和切片区别</h3><p><strong>数组</strong></p>
+<ul>
+<li><p>固定大小：数组的大小是在编译时确定的，且在声明时必须指定。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr [<span class="number">5</span>]<span class="type">int</span>  <span class="comment">// 长度为5的整型数组</span></span><br></pre></td></tr></table></figure></li>
+<li><p>连续内存：数组的元素在内存中是连续存储的。</p>
+</li>
+<li><p>整体值传递：数组作为函数参数时，传递的是整个数组的副本。</p>
+</li>
+<li><p>索引访问：通过索引访问数组元素，索引从0开始。</p>
+</li>
+</ul>
+<p><strong>切片</strong></p>
+<ul>
+<li>动态大小：切片的长度可以在运行时动态改变，不需要在声明时指定大小。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> slice []<span class="type">int</span>  <span class="comment">// 空切片，长度为0</span></span><br><span class="line">slice = <span class="built_in">append</span>(slice, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)  <span class="comment">// 添加元素，长度自动增加</span></span><br></pre></td></tr></table></figure></li>
+<li>内部结构：切片由三个部分组成：指向底层数组的指针、切片的长度（当前包含的元素数量）和切片的容量（从指针位置开始，底层数组还能容纳的元素数量）。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> slice <span class="keyword">struct</span> &#123;</span><br><span class="line">    array unsafe.Pointer <span class="comment">// 指向底层数组的指针</span></span><br><span class="line">    <span class="built_in">len</span>   <span class="type">int</span>            <span class="comment">// 当前切片的长度</span></span><br><span class="line">    <span class="built_in">cap</span>   <span class="type">int</span>            <span class="comment">// 切片的容量（从指针位置到数组末尾的长度）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>引用传递：切片作为函数参数时，传递的是切片的头部（指针、长度和容量），而不是整个底层数组的副本。这使得操作切片时更加高效。</li>
+<li>可变长度：可以通过内置的append函数动态地添加元素到切片中，如果底层数组空间不足，会自动分配新的内存空间并复制原数据。</li>
+</ul>
+<h2 id="映射类型–map"><a href="#映射类型–map" class="headerlink" title="映射类型–map"></a>映射类型–map</h2><p>map[K]V，表示键值对的集合，其中 K 是键的类型，V 是值的类型。</p>
+<h3 id="map使用"><a href="#map使用" class="headerlink" title="map使用"></a>map使用</h3><p><strong>1. 某些场景下，将value定义为struct，会有更优的性能</strong><br>当 map 的 value 是 struct 类型时，数据会直接存储在 map 中，而不是通过指针引用。这可以减少内存分配的开销和 GC（垃圾回收）的负担。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    ID   <span class="type">int</span></span><br><span class="line">    Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]User)</span><br><span class="line">m[<span class="string">&quot;user1&quot;</span>] = User&#123;ID: <span class="number">1</span>, Name: <span class="string">&quot;John&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Example with pointer to struct</span></span><br><span class="line">m2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]*User)</span><br><span class="line">m2[<span class="string">&quot;user1&quot;</span>] = &amp;User&#123;ID: <span class="number">1</span>, Name: <span class="string">&quot;John&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>在示例中，map 中存储的是指向 User 结构体的指针，这意味着除了存储指针本身外，还需要额外的内存来存储 User 结构体。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set1 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">bool</span>)</span><br><span class="line">set1[<span class="number">1</span>] = <span class="literal">true</span></span><br><span class="line">set1[<span class="number">2</span>] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">set2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">set2[<span class="number">1</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">set2[<span class="number">2</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在示例中，map[int]bool{} 会比 map[int]struct{}{} 使用更多的内存，因为 bool 类型需要存储一个字节（在实际应用中可能会有额外的内存对齐和管理开销），而 struct{} 是空的，不会增加任何内存开销。</p>
+<p>优点：</p>
+<ul>
+<li>节省内存， 并且会减少 GC 的负担。</li>
+<li>避免内存碎片化，存储指针时，由于指针可能指向堆中的不同位置，这会导致内存碎片化，增加了内存使用的不确定性。而存储 struct 使得数据更紧凑，减少了碎片化。</li>
+<li>更高的缓存命中率，由于 struct 的数据是紧凑存储的，相对于存储指针，struct 的数据更可能在相邻的内存位置。这增加了 CPU 缓存的命中率，从而提高了性能。</li>
+</ul>
+<p><strong>2. Go语言的map的键类型为什么不能是函数类型、字典类型、切片类型？</strong></p>
+<ul>
+<li>对于所有键值对元素的数据结构来说，存储过程先计算key的哈希值，随后<strong>使用哈希值定位到对应的bucket</strong>，将key和value作为元素存储到对应的bucket中。</li>
+<li>在这个过程中可能会发生哈希冲突，由于哈希冲突的存在对于哈希表的键的要求，<strong>不仅仅能够计算哈希值，同时能够对键进行判等操作</strong>（解决哈希冲突时key重复的问题）。</li>
+<li>如果go的map的键为上述三种类型，在运行时就会发生panic。</li>
+</ul>
+<p><strong>3. map使用时的并发安全问题：</strong></p>
+<p>对于map的读写是非原子性操作，存在资源竞争，不是现成安全的。为了将非并发安全的读取操作更改为并发安全的，可以引入sync.Mutex，在读、写操作前进行加锁操作；操作后进行解锁，保证并发安全。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	m := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>&#123;</span><br><span class="line">		<span class="number">1</span>: <span class="string">&quot;haha&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> mutex sync.Mutex <span class="comment">// 创建一个互斥锁</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动读协程</span></span><br><span class="line">	<span class="keyword">go</span> read(m, &amp;mutex)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 等待一秒钟，确保读协程已经开始运行</span></span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动写协程</span></span><br><span class="line">	<span class="keyword">go</span> write(m, &amp;mutex)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 等待足够长的时间，以便读写协程可以运行</span></span><br><span class="line">	time.Sleep(<span class="number">30</span> * time.Second)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 打印最终的map</span></span><br><span class="line">	fmt.Println(m)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">read</span><span class="params">(m <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>, mutex *sync.Mutex)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		mutex.Lock() <span class="comment">// 在读取之前加锁</span></span><br><span class="line">		value := m[<span class="number">1</span>]</span><br><span class="line">		mutex.Unlock() <span class="comment">// 读取完毕后解锁</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;Read:&quot;</span>, value)</span><br><span class="line">		time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">write</span><span class="params">(m <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>, mutex *sync.Mutex)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		mutex.Lock() <span class="comment">// 在写入之前加锁</span></span><br><span class="line">		m[<span class="number">1</span>] = <span class="string">&quot;write&quot;</span></span><br><span class="line">		mutex.Unlock() <span class="comment">// 写入完毕后解锁</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;Write:&quot;</span>, m[<span class="number">1</span>])</span><br><span class="line">		time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="map原理"><a href="#map原理" class="headerlink" title="map原理"></a>map原理</h3><p>map实现的两个关键数据结构</p>
+<ul>
+<li>hmap 定义了map的结构<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">    count     <span class="type">int</span>           <span class="comment">// 当前 map 中的元素个数</span></span><br><span class="line">    flags     <span class="type">uint8</span>         <span class="comment">// 状态标志位</span></span><br><span class="line">    B         <span class="type">uint8</span>         <span class="comment">// buckets 数组的长度为 2^B</span></span><br><span class="line">    noverflow <span class="type">uint16</span>        <span class="comment">// 溢出桶的数量</span></span><br><span class="line">    </span><br><span class="line">    buckets    unsafe.Pointer <span class="comment">// 指向 buckets 数组的指针</span></span><br><span class="line">    oldbuckets unsafe.Pointer <span class="comment">// 扩容时保存旧的 buckets 数组</span></span><br><span class="line">    extra      *mapextra    <span class="comment">// 用于保存溢出桶的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>bmap 定义了hmap.buckets中每个bucket的结构，每个 bmap 可以存储 8 个键值对（默认）。以下是 bmap 的关键字段：<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">    tophash   [bucketCnt]<span class="type">uint8</span>              <span class="comment">// 存储每个键的哈希值的高 8 位</span></span><br><span class="line">    keys      [bucketCnt]keytype    <span class="comment">// 存储 bucketCnt 个键</span></span><br><span class="line">    values    [bucketCnt]valuetype  <span class="comment">// 存储 bucketCnt 个值</span></span><br><span class="line">    overflow  <span class="type">uintptr</span>               <span class="comment">// 指向下一个溢出桶</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>key hash值的后B位作为桶index查找桶<br>key hash值的前8位作为桶内结构体的三个数组（tophash，key，value）的index<br>桶结构体的tophash复用，既作为tophash使用，也作为标志位使用</p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ol>
+<li><p>哈希计算<br>当我们向map中插入一个键值对，首先对键进行哈希计算。Go内置了哈希函数来计算键的哈希值。哈希值是一个64位的整数。</p>
+</li>
+<li><p>分桶依据<br>Go 中的 map 是分成多个桶 (bucket) 来存储的。桶的数量通常是 2 的幂次，这样可以方便地通过位运算来定位到具体的桶。哈希值的高八位和低八位分别用于分桶和桶内定位：<br>高八位 (top 8 bits)：用于决定哈希表中的桶位置。<br>低八位 (low 8 bits)：用于桶内查找。</p>
+</li>
+<li><p>溢出桶使用<br>每个桶中可以存储 8 个键值对。当某个桶中的元素超过 8 个时，Go 会使用溢出桶来存储额外的键值对，并通过 overflow 字段将其链接到当前 bmap 后面。这样可以动态扩展 map 的存储空间，而不需要立即进行扩容。</p>
+</li>
+</ol>
+<h4 id="插入过程"><a href="#插入过程" class="headerlink" title="插入过程"></a>插入过程</h4><p>当插入一个键值对时，过程如下：</p>
+<ol>
+<li>计算哈希值<br>对键进行哈希计算得到哈希值 hash。</li>
+<li>定位桶<br>通过 hash &gt;&gt; (64 - B)（B 是桶的数量的对数）得到桶的索引 index。</li>
+<li>桶内查找<br>通过 hash &amp; (bucketCnt - 1) 得到桶内索引。然后通过对比 tophash 数组中的值来定位到具体的键值对存储位置。</li>
+<li>存储键值对<br>将键值对存储到相应的位置，如果当前桶已满，则分配新的溢出桶来存储额外的键值对。</li>
+</ol>
+<h4 id="查找过程"><a href="#查找过程" class="headerlink" title="查找过程"></a>查找过程</h4><p>查找的过程与插入类似：</p>
+<ol>
+<li>计算哈希值：<br>对键进行哈希计算得到哈希值 hash。</li>
+<li>定位桶：<br>通过 hash &gt;&gt; (64 - B) 得到桶的索引 index。</li>
+<li>桶内查找：<br>通过 hash &amp; (bucketCnt - 1) 得到桶内索引，然后在相应的 bmap 中查找 tophash 和 keys 数组中匹配的键。如果在当前桶中没有找到，则继续查找溢出桶。</li>
+</ol>
+<h4 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h4><p><strong>扩容触发条件</strong></p>
+<ul>
+<li>装载因子过高：装载因子（load factor）是 <strong>map 中元素数量与桶数量的比值</strong>。装载因子阈值通常为 6.5，当装载因子超过这个值时会触发<strong>双倍扩容</strong>。</li>
+<li>溢出桶过多：当溢出桶的数量过多时，会触发<strong>等量扩容</strong>。</li>
+</ul>
+<h5 id="双倍扩容"><a href="#双倍扩容" class="headerlink" title="双倍扩容"></a>双倍扩容</h5><p>如下图，原来 B &#x3D; 0，只有一个桶，装满后触发翻倍扩容，B &#x3D; 1，buckets 指向两个新桶，oldbuckets 指向旧桶，nevacuate 表示接下来要迁移编号为 0 的旧桶。旧桶的键值对会<strong>渐进式分流</strong>到两个新桶中。直到旧桶中的键值对全部搬迁完毕后，删除oldbuckets。</p>
+<p>这种扩容会导致 <strong>桶迁移</strong>，需要将原有的 key&#x2F;value 重新搬迁到新的内存地址，如果map存储了数以亿计的key-value，一次性搬迁将会造成比较大的延时，因此 Go map 的扩容采取了<strong>渐进式扩容的方式，原有的 key 并不会一次性搬迁完毕，每次最多只会搬迁 2 个 bucket。只有在插入或修改、删除 key 的时候，都会尝试进行搬迁 buckets 的工作</strong>。具体来说就是检查 oldbuckets 是否为 nil。</p>
+<p><img data-src="/transblog/images/158593311250264.jpg"></p>
+<p>迁移过程中使用与运算法hash &amp; (bucketCnt-1)，用旧桶的hash值跟扩容后的桶的个数 bucketCnt-1 的值相与(&amp;)，得几就在哪个位置上。</p>
+<p>示例：</p>
+<ul>
+<li>如果旧桶数量为4，那么新桶的数量就为 8。</li>
+<li>如果该参数选择 0 号旧桶说明哈希值为 xxxxxx00，旧桶 m-1 &#x3D; 3 &#x3D; 00000011  –&gt; xxxxxx00 &amp; 00000011 &#x3D; 0</li>
+<li>因此选择新桶取决于哈希值的第三位是 0 还是 1，新桶 m-1 &#x3D; 7 &#x3D; 00000111，与原哈希值 xxxxxx00 进行与运算，若第三位是 0 则为 00000000 &#x3D; 0，第三位为 1 则为 00000100 &#x3D; 4。</li>
+</ul>
+<h5 id="等量扩容"><a href="#等量扩容" class="headerlink" title="等量扩容"></a>等量扩容</h5><ul>
+<li>当 B &lt; 15 时，如果溢出桶的数量超过 2^B，则触发等量扩容。</li>
+<li>当 B &gt;&#x3D; 15 时，如果溢出桶的数量超过 2^15，则触发等量扩容。</li>
+</ul>
+<p>虽然没有超过负载因子限制，但是使用溢出桶过多，就会触发等量扩容，创建和旧桶数目一样多的新桶，然后把原来的键值对迁移到新桶中。</p>
+<p>一般发生在很多键值对被删除的情况下，这样会造成overflow的bucket数量增多，但负载因子又不高。同样数目的键值对，迁移到新桶中会把松散的键值对重新排列一次，使其排列的更加紧凑，进而保证更快的存取，这就是等量扩容的意义所在。</p>
+<h3 id="线程不安全"><a href="#线程不安全" class="headerlink" title="线程不安全"></a>线程不安全</h3><p>golang 中的 map 是并发不安全的，多个 go 协程同时对同一个 map 进行读写操作时，会导致数据竞争（data race）问题，程序会 panic。读取到的值可能是过期的、不正确的或 nil；写入的值可能被覆盖、丢失或者多次计数。</p>
+<p>举个例子：某 map 桶数量为 4，即 B&#x3D;2。此时 goroutine1 来插入 key1，goroutine2 来读取 key2。可能会发生如下过程：</p>
+<blockquote>
+<ol>
+<li>goroutine2 计算 key2 的 hash 值，B&#x3D;2，并确定桶号为 1。</li>
+<li>goroutine1 添加 key1，触发扩容条件。</li>
+<li>B&#x3D;B+1&#x3D;3，buckets 数据迁移到 oldbuckets。</li>
+<li>goroutine2 从桶 1 中遍历，获取数据失败。</li>
+</ol>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">    <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            m[i] = i</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    wg.Wait()</span><br><span class="line">    fmt.Println(m)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-sync-Mutex-进行同步"><a href="#使用-sync-Mutex-进行同步" class="headerlink" title="使用 sync.Mutex 进行同步"></a>使用 sync.Mutex 进行同步</h4><p>为了避免数据竞争，可以使用 sync.Mutex 进行同步。sync.Mutex 提供了锁机制，在这个示例中，使用 mu.Lock() 和 mu.Unlock() 确保每次只有一个 goroutine 可以访问 map，从而避免数据竞争。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">    <span class="keyword">var</span> mu sync.Mutex</span><br><span class="line">    <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            mu.Lock()</span><br><span class="line">            m[i] = i</span><br><span class="line">            mu.Unlock()</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    wg.Wait()</span><br><span class="line">    fmt.Println(m)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="使用-sync-RWMutex-进行读写锁"><a href="#使用-sync-RWMutex-进行读写锁" class="headerlink" title="使用 sync.RWMutex 进行读写锁"></a>使用 sync.RWMutex 进行读写锁</h4><p>如果读操作远多于写操作，可以使用 sync.RWMutex 进行读写锁。sync.RWMutex 提供了读锁和写锁，允许多个 goroutine 同时进行读操作，但写操作仍然是互斥的。在这个示例中，使用 mu.RLock() 和 mu.RUnlock() 进行读操作，使用 mu.Lock() 和 mu.Unlock() 进行写操作，从而提高并发读的效率。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">    <span class="keyword">var</span> mu sync.RWMutex</span><br><span class="line">    <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            mu.Lock()</span><br><span class="line">            m[i] = i</span><br><span class="line">            mu.Unlock()</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            mu.RLock()</span><br><span class="line">            fmt.Println(m[i])</span><br><span class="line">            mu.RUnlock()</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-sync-Map"><a href="#使用-sync-Map" class="headerlink" title="使用 sync.Map"></a>使用 sync.Map</h4><p>Golang 标准库提供了 sync.Map，它是一个并发安全的 map 实现，适用于需要高并发访问的场景。sync.Map 提供了原子操作，避免了手动加锁的复杂性。在这个示例中，使用 m.Store() 进行写操作，使用 m.Load() 进行读操作，sync.Map 内部已经实现了并发安全。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> m sync.Map</span><br><span class="line">    <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            m.Store(i, i)</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        wg.Add(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> wg.Done()</span><br><span class="line">            value, _ := m.Load(i)</span><br><span class="line">            fmt.Println(value)</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="结构体类–struct"><a href="#结构体类–struct" class="headerlink" title="结构体类–struct"></a>结构体类–struct</h2><p>struct，表示由多个字段组成的复合类型。</p>
+<h2 id="接口类型–interface"><a href="#接口类型–interface" class="headerlink" title="接口类型–interface"></a>接口类型–interface</h2><p>interface，表示一组方法的集合。</p>
+<h2 id="函数类型–func"><a href="#函数类型–func" class="headerlink" title="函数类型–func"></a>函数类型–func</h2><p>func，表示函数类型。</p>
+<h1 id="Go实现继承"><a href="#Go实现继承" class="headerlink" title="Go实现继承"></a>Go实现继承</h1><h2 id="1-通过结构体嵌套进行组合"><a href="#1-通过结构体嵌套进行组合" class="headerlink" title="1. 通过结构体嵌套进行组合"></a>1. 通过结构体嵌套进行组合</h2><p>在Go语言中，结构体嵌套是一种常见的实现继承的方式。通过将一个结构体嵌套在另一个结构体中，可以使得外层结构体拥有内层结构体的所有字段和方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">	Age  <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Animal)</span></span> Speak() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;I am an animal.&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Animal</span><br><span class="line">	Breed <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> Bark() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Woof! Woof!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	dog := Dog&#123;</span><br><span class="line">		Animal: Animal&#123;Name: <span class="string">&quot;Buddy&quot;</span>, Age: <span class="number">3</span>&#125;,</span><br><span class="line">		Breed:  <span class="string">&quot;Golden Retriever&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;Name: %s, Age: %d, Breed: %s\n&quot;</span>, dog.Name, dog.Age, dog.Breed)</span><br><span class="line">	dog.Speak() <span class="comment">// 通过组合实现了继承</span></span><br><span class="line">	dog.Bark()  <span class="comment">// Dog结构体自己的方法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-通过接口实现多态性"><a href="#2-通过接口实现多态性" class="headerlink" title="2. 通过接口实现多态性"></a>2. 通过接口实现多态性</h2><p>接口是Go语言实现多态性的重要机制。通过定义接口，可以抽象出不同类型对象的共同行为，从而实现类似于继承和多态的效果。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Speaker <span class="keyword">interface</span> &#123;</span><br><span class="line">	Speak()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Animal)</span></span> Speak() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;I am an animal.&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Animal</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> Speak() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Woof! Woof!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> speaker Speaker</span><br><span class="line">	animal := Animal&#123;Name: <span class="string">&quot;Buddy&quot;</span>&#125;</span><br><span class="line">	dog := Dog&#123;Animal: Animal&#123;Name: <span class="string">&quot;Max&quot;</span>&#125;&#125;</span><br><span class="line">	speaker = animal</span><br><span class="line">	speaker.Speak() <span class="comment">// 输出：I am an animal.</span></span><br><span class="line"></span><br><span class="line">	speaker = dog</span><br><span class="line">	speaker.Speak() <span class="comment">// 输出：Woof! Woof!</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="3-通过方法实现功能共享"><a href="#3-通过方法实现功能共享" class="headerlink" title="3. 通过方法实现功能共享"></a>3. 通过方法实现功能共享</h2><p>在Go语言中，方法可以绑定到特定类型的结构体上，从而实现功能的共享和复用。这种方式在某些情况下也可以看作是继承的一种变体。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Animal)</span></span> Speak() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;I am an animal.&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Animal</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> Speak() &#123;</span><br><span class="line">	d.Animal.Speak() <span class="comment">// 调用Animal的Speak方法</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;Woof! Woof!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	dog := Dog&#123;Animal: Animal&#123;Name: <span class="string">&quot;Buddy&quot;</span>&#125;&#125;</span><br><span class="line">	dog.Speak() <span class="comment">// 输出：I am an animal. Woof! Woof!</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="函数参数传递"><a href="#函数参数传递" class="headerlink" title="函数参数传递"></a>函数参数传递</h1><p><strong>值传递的数据类型有：基本数据类型（int、float、bool、string等）、数组和结构体</strong>。<br><strong>引用传递的数据类型有：指针、slice、map、管道（channel）、interface等</strong>。</p>
+<h1 id="Go-Runtime"><a href="#Go-Runtime" class="headerlink" title="Go Runtime"></a>Go Runtime</h1><p>Go runtime 可以形象的理解为 Go 程序运行时的环境，类似于 JVM。不同于 JVM 的是，Go 的 runtime 与业务程序直接打包在一块，是一个可执行文件，直接运行在操作系统上，效率很高。</p>
+<p>runtime 包含了一些 Go 的一些非常核心的功能：<strong>协程调度、垃圾回收、内存分配</strong>等。</p>
+<h2 id="协程调度"><a href="#协程调度" class="headerlink" title="协程调度"></a>协程调度</h2><p><span id="target1"></span></p>
+<p>协程调度是指 Go 如何管理和执行协程，Go 的协程调度基于 GMP 模型。即：</p>
+<ol>
+<li>G (Goroutine)：即 Go 的协程，包含了栈信息，代码指针，状态等；</li>
+<li>M (Machine)：代表一个工作线程，由操作系统直接分配；</li>
+<li>P (Processor)：处理器（Go 定义的一个概念，不是指 CPU），包含了协程运行的所需资源，如本地队列、全局队列、计数器等。</li>
+</ol>
+<p>GMP 三者的关系：</p>
+<p>P 的个数取决于设置的 runtime.GOMAXPROCS，默认是物理 CPU 的逻辑核心数量，比如四核八线程的 CPU，P 的数量就是 8；<br>M 的数量一般是多于 P 的，M 要想被 CPU 执行，必须先获取 P。没有获取 P 的 M，则处于休眠状态；<br>G 可以理解为代码本体，G 必须要被 P 调度进入 M，才可以被 CPU 执行；<br>P 包含了一个 LRQ （Local Run Queue）本地运行队列，保存着等待执行的协程（G）队列。没有被分配到 P 的 G，会被保存到 GRQ (Global Run Queue) 全局队列中，处于休眠状态。<br>假如主机是单逻辑 CPU 的，那么 GMP 是这样的：</p>
+<p><img data-src="/transblog/images/421481918247064.png"></p>
+<p>红色部分表示休眠或者挂起状态，黄色代表等待执行，绿色表示正在运行。系统初始化了两个线程，但我们只有一个处理器（P）， M1 没有获取到 P，所以只能休眠。M0 当前获取到 P ，正在处理 G0, LRQ 里面目前有三个 G 在排队等待被 M 运行，GRQ 里面保存着 G4、G5、G6，表示它们还没有分配到队列中。</p>
+<p>P 这个时候会分别对 LRQ 进行周期队列轮转 和 GRO 周期性检查：</p>
+<p>队列轮转：LRQ 中的 G 被 P 调度到 M 中执行，每个 G 执行一段时间后，就会保存其上下文并放入队列尾部，然后取出队列头部的 G 进入 M 执行。<br>周期性检查：P 会检查 GRQ 中是否有 G 正在等待运行，并将其放入 M 中执行，防止协程被饿死。<br>在队列轮转中，如果当前正在运行的 G 遇到了系统调用，那么系统就会挂起当前 M0，释放 P，M1 就会绑定释放的 P，来继续执行其他协程。<br>假设 GO 遇到了系统调用：</p>
+<p><img data-src="/transblog/images/555091918267230.png"></p>
+<p>等到 M1 中所有的协程执行完或者 M1 处理某个协程也遇到了了系统调用，就会重新释放 P 给其他空闲的 M。而另外一边 G0 的系统调用结束后，就会将 M0 线程从挂起状态变成休眠状态，并将 G0 放入 GRQ，等待被 P 重新调入 LRQ 中轮转执行。</p>
+<p>如果我们的主机具备多个逻辑 CPU，创建了多个 P，那么就会变成多个线程并行执行：</p>
+<p><img data-src="/transblog/images/108562018259899.png"></p>
+<p>多线程同时处理时，很有可能多个 LRQ 是不均衡的。假如上图的 M0 已经执行完了，其他线程还处于繁忙状态，M0 所绑定的 P 就会去检查 GQR，GQR 中也没有 G，那么它就会去偷取其他 LRQ 一部分的 G 来执行，一般每次会偷取一半。</p>
+<h2 id="垃圾回收（GC）"><a href="#垃圾回收（GC）" class="headerlink" title="垃圾回收（GC）"></a>垃圾回收（GC）</h2><p>垃圾回收（Garbage Collection，GC） 是Go语言的核心特性之一，是实现内存自动管理的一种形式。golang的自动垃圾回收屏蔽了复杂且容易出错的内存操作，让开发变得更加简单、高效。在Go语言中，从实现机制上来说，垃圾回收可能是最复杂的模块了。了解垃圾回收的机制，有助于更好地理解Go语言的内存管理机制，从而更好的使用Go语言进行开发。</p>
+<p>垃圾回收涉及到一下三个组件：</p>
+<p><img data-src="/transblog/images/441184310256443.png"></p>
+<ul>
+<li>Allocator-分配器：在堆上申请内存</li>
+<li>Mutator-赋值器：将Allocator申请到的内存对象赋值给栈上的变量（或全局变量）。</li>
+<li>Collector-回收器：回收不再活跃的内存对象。</li>
+</ul>
+<h3 id="标记-清除-算法"><a href="#标记-清除-算法" class="headerlink" title="标记-清除 算法"></a>标记-清除 算法</h3><p>Go语言使用标记-清除（Mark-Sweep）算法来进行内存垃圾回收。Mark-Sweep算法执行过程可以分成标记（Mark）和清除（Sweep）两个阶段：</p>
+<ul>
+<li>Mark阶段： 从根对象开始，对内存对象进行图遍历，对所有可达的对象进行标记。</li>
+<li>Sweep阶段： 对Mark阶段未被标记的内存对象进行回收，回收完毕后重置所有内存对象的标记以便下一轮‘标记-清除’。</li>
+</ul>
+<p>什么是根对象？<br><strong>根对象主要是指应用程序中通过变量可以直接访问的对象</strong>。假设应用程序在堆上申请了A-J共10个内存对象。其中可以被程序中的变量直接访问的只有对象A和B（分别被变量a、b直接访问），因此根对象只有A和B。其他内存对象都是间接访问，不是根对象。</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>原始的Mark-Sweep算法流程上相对简单，但是在实际应用中有一定的限制条件。在垃圾回收的整个过程中，如果应用程序并发进行内存相关操作，<strong>可能导致活跃对象被错误回收</strong></p>
+<p><img data-src="/transblog/images/570304810276609.png"></p>
+<p>如上图所示，在标记阶段根对象A做DFS遍历完成后，Mutator并发修改了对内存对象D的引用关系（增加了A对象对D对象的引用，删除了B对象对D对象的引用），然后Collector在对根对象B做DFS遍历。最终导致的结果是，从根对象A可以到达对象D（即D是活跃的），但是标记结果显示对象D是可以被回收的内存对象，从而错误释放了对象D的内存。</p>
+<p>在原始&lt;标记-清除&gt;算法中，要保证活跃对象不被被错误回收，需要满足以下必要条件：<strong>活跃白色对象必须从白色的根对象可达</strong>。这个条件在并发和增量执行的过程中其实是很难保证的，**因而：原始的Mark-Sweep算法会在垃圾回收阶段Stop-The-World（STW），不支持并发和增量执行，就是需要将程序暂停，程序出现卡顿 (重要问题)**。还有一些小问题就是这个：标记需要扫描整个heap，清除数据会产生heap碎片。</p>
+<h3 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h3><p>Go语言使用三色标记法和屏障技术来支持并发和增量执行。</p>
+<p>三色标记算法将所有的内存对象抽象为黑、白、灰三类：</p>
+<ul>
+<li>白色： 初始色，如果标记阶段结束还是白色，则该内存对象将被回收。</li>
+<li>灰色： 活跃的对象，存在于标记阶段中间状态，自身及其下游需要被进一步扫描、标记。所有的根对象在标记开始时被全部置为灰色。</li>
+<li>黑色： 活跃的对象，已被标记完成，不会再通过该对象对其下游对象扫描标记。</li>
+</ul>
+<p>三色标记法的基本过程：</p>
+<ol>
+<li>垃圾回收开始前，所有的内存对象都是白色；</li>
+<li>垃圾回收开始时，所有根对象被标记会灰色；</li>
+<li>从灰色对象集合，选取一个灰色对象，将其下游白色对象置灰，将自己置为黑色；</li>
+<li>重复第3步骤，直至灰色对象集合为空。</li>
+</ol>
+<p><strong>三色标记法只能由白-&gt;灰-&gt;黑单调变色</strong></p>
+<p><img data-src="/transblog/images/354290508469088.png"></p>
+<p>三色标记法本身仍然不能保证并发和增量执行的正确性。在并发和增量执行的场景下，活跃对象（白色）被错误回收的触发条件：</p>
+<ol>
+<li>不存在从灰色对象到达该白色对象的路径。（该白色对象在标记阶段不会再被扫描到）</li>
+<li>存在从黑色对象到达该白色对象的路径。（否则结合1的话，该白色对象本来就是一个需要被回收的垃圾对象）</li>
+</ol>
+<p>等于说，单纯的三色标记法，还是无法避免要进行STW，如果不进行STW，则活跃对象可能被错误回收，如下图：</p>
+<p>此时在进行GC但是程序也是在运行的，此时黑色对象4创建了一个指针指向了白色对象3</p>
+<p><img data-src="/transblog/images/197016623769751.png"></p>
+<p>并且这个黑色对象2删除了和对象3的引用关系，那么活跃对象3会被回收<br><img data-src="/transblog/images/347984041280436.png"></p>
+<h4 id="两种三色不变性"><a href="#两种三色不变性" class="headerlink" title="两种三色不变性"></a>两种三色不变性</h4><p>由此，就衍生了两种三色不变性：</p>
+<ol>
+<li>强三色不变性：不存在黑色对象对白色对象的直接引用。（隐含了一层意思：如果该对象是活跃对象，那么必然存在从灰色对象到该对象的路径）。强三色不变性破坏了两个条件。</li>
+<li>弱三色不变性：被黑色对象直接引用的白色对象，必须要能够通过一些灰色对象可达。破坏了”不存在从灰色对象到达该白色对象的路径”这个条件。</li>
+</ol>
+<p><img data-src="/transblog/images/443236016183411.png"><br><img data-src="/transblog/images/106235435019228.png"></p>
+<h4 id="屏障技术"><a href="#屏障技术" class="headerlink" title="屏障技术"></a>屏障技术</h4><p>内存屏障技术是一种CPU屏障指令，用于让CPU和编译器对屏障指令前后的内存操作的执行顺序进行强制约束。现在处理器为了优化性能，经常会改变程序指令的执行顺序，而内存屏障技术则是用来对一些内存操作的执行顺序进行强制约束。<strong>内存屏障指令前的内存操作一定会在内存屏障指令后的操作之前执行。</strong><br>内存屏障技术本身并不能用来保证三色不变性。但是我们可以利用内存屏障技术在内存操作之前执行特定的（用于保护三色不变性）的指令（执行特定代码）（就像Hook一样）。可以把内存操作分为以下几种：</p>
+<ol>
+<li>堆对象的读，写</li>
+<li>栈对象的读，写</li>
+</ol>
+<p>通过两种三色不变性，谷歌团队引入了这个插入屏障和删除屏障</p>
+<h5 id="插入写屏障"><a href="#插入写屏障" class="headerlink" title="插入写屏障"></a>插入写屏障</h5><p>当Mutator在增加一个内存对象A到另一个内存对象B的指向时（在有向图中增加A-&gt;B这条边），引入内存屏障，将内存对象B置灰。可以用来保证内存对象的强三色不变性。<br>还有一种情况就是A之前引用了这个对象C，现在A想引用B也就是不引用C了此时B也会被置为灰色。</p>
+<p>下图的示例：没有暂停程序，黑色对象4引用了这个白色对象8<br><img data-src="/transblog/images/45536040005929.png"></p>
+<p>那么此时开启这个插入屏障，白色对象会被置为灰色。如下图所示：<br>栈是不开启这个插入写屏障的，所以对象9并不会被标记为灰色，<strong>这是因为栈要保证效率</strong>，因此运行时对栈上对象一般都不会开启写屏障，而只对堆上的对象做此处理</p>
+<p><img data-src="/transblog/images/384867418122791.png"></p>
+<p>然后继续三次标记法的流程，遍历完成后的样子大致是这样：</p>
+<p><img data-src="/transblog/images/158188185122180.png"></p>
+<p>但是此时对象9不会被当作是垃圾而被清除掉吗？此时在处理回收这个白色对象时，会开启STW，<strong>注意：只是对栈开启这个SWT，将栈里面的对象全部置为白色重新上述过程（此处STW占用大概10ms-100ms）</strong>。这样就能保证这个对象9不会被误删</p>
+<p><img data-src="/transblog/images/446725432389805.png"></p>
+<p>最终会变成如下图：<br><img data-src="/transblog/images/154056556979502.png"></p>
+<h5 id="删除写屏障"><a href="#删除写屏障" class="headerlink" title="删除写屏障"></a>删除写屏障</h5><p>当Mutator在删除一个内存对象A到另一个内存对象B的指向时（在有向图中删除A-&gt;B这条边），引入内存屏障，将内存对象B置灰。这一点其实就是为了满足弱三色不变式。 (保护灰色对象到白色对象的路径不会断)<br>还有一种情况就是A之前引用了B，此时A更换了引用关系引用C，也就是A和B之间的引用关系被删除掉了。此时B对象会被置为灰色。</p>
+<p>下图的示例：此时对象1想要删除和对象5之间的引用关系，此时就会触发删除写屏障。<br><img data-src="/transblog/images/277420432971214.png"></p>
+<p>删除完成后如下图：</p>
+<p><img data-src="/transblog/images/493744345367524.png"></p>
+<p>最后的情况：</p>
+<p><img data-src="/transblog/images/417872654956706.png"></p>
+<p>此时又有疑问了：对象5、2、3不是垃圾吗？为什么保留下来了？在这一次GC过程当中他们确实是被保留下来了，但是下一轮GC的时候就会被干掉了。<br>由此可知：<strong>这种方式的回收精度低</strong>，一个对象即使被删除了最后一个指向它的指针也依旧可以活过这一轮，在下一轮GC中被清理掉。</p>
+<h5 id="混合写屏障"><a href="#混合写屏障" class="headerlink" title="混合写屏障"></a>混合写屏障</h5><p><span id="target2"></span></p>
+<p>那么我们可以得知这两个写屏障的缺点：</p>
+<ul>
+<li>插入写屏障：需要两次STW。</li>
+<li>删除写屏障：一次STW， 回收精度较低。</li>
+</ul>
+<p>那么有没有一种方式，即不需要STW，也能有较高的回收精度呢？Go V1.8版本引入了混合写屏障机制（hybrid write barrier），避免了对栈re-scan的过程，极大的减少了STW的时间。结合了两者的优点：</p>
+<ol>
+<li>混合写屏障一开始将栈上的对象全部标记为黑色</li>
+<li>在GC期间任何在栈上创建的对象均为黑色。</li>
+<li>被删除引用的对象均标记为灰色</li>
+<li>被添加引用的对象均标记为灰色</li>
+<li>栈不开启屏障机制</li>
+</ol>
+<h6 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h6><p><strong>对象被一个堆对象删除引用，成为栈对象的下游</strong></p>
+<p>下图示例：请注意GC刚开始所有对象都是白色的，然后第一步扫描栈区将栈上的对象全部标记为黑色（后续不再赘述）</p>
+<p><img data-src="/transblog/images/350634034397969.png"></p>
+<p>对象1添加引用关系到对象7，此时因为栈是不开启任何屏障机制所以了直接添加即可，如下图：<br><img data-src="/transblog/images/452795838973598.png"></p>
+<p>对象4删除和对象7的引用关系，那么按照规则需要将对象7置为灰色。此时我们发现不会有任何错误，如下图：</p>
+<p><img data-src="/transblog/images/263045830266873.png"></p>
+<h6 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h6><p><strong>对象被一个栈对象删除引用，成为另一个栈对象的下游</strong></p>
+<p>首先在栈上新键一个对象9，按照规则在栈上创建的对象均为黑色对象。</p>
+<p><img data-src="/transblog/images/39155480225688.png"></p>
+<p>添加对象9到对象3的引用关系，由于这个栈不启动任何屏障直接添加即可。</p>
+<p><img data-src="/transblog/images/537903220496054.png"></p>
+<p>接着对象2删除和对象3之间的引用关系，由于是在栈上所以了之间删除即可。此时也是没有任何问题，不存在误删的情况</p>
+<p><img data-src="/transblog/images/139063330680373.png"></p>
+<h6 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h6><p><strong>对象被一个堆对象删除引用，成为另一个堆对象的下游</strong></p>
+<p>对象10想要添加这个引用关系和对象7<br><img data-src="/transblog/images/135235495380802.png"></p>
+<p>由于是在堆上所以了会触发这个屏障机制会将对象7变为灰色。对象7变为灰色之后，就不会被当中垃圾被回收了。</p>
+<p><img data-src="/transblog/images/502093294335607.png"></p>
+<h6 id="场景四"><a href="#场景四" class="headerlink" title="场景四"></a>场景四</h6><p><strong>对象从一个栈对象删除引用，成为另一个堆对象的下游</strong></p>
+<p>对象1想要删除和对象2之间的引用关系，由于栈不开启这个屏障机制所以直接删除即可。</p>
+<p><img data-src="/transblog/images/71224738016901.png"></p>
+<p>对象4尝试引用对象2，对象2本来就是黑色了所以不用管。</p>
+<p><img data-src="/transblog/images/299987682086952.png"></p>
+<p>对象4删除和对象7之间的引用关系，此时由于是在堆上所以了触发了这个混合写屏障机制，将对象7置为灰色。</p>
+<p><img data-src="/transblog/images/257604698885192.png"></p>
+<p>对象7和对象6现在属于垃圾对象，应该被回收。但是对象7是灰色，这会让对象7和对象6不被回收掉。<strong>在这一轮GC的情况下确实不会被回收，但是下一轮GC就会将对象7和对象6回收掉</strong>。这一点设计者是考虑到了的</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>以上就是Go语言垃圾回收机制，Go中的混合写屏障满足<strong>弱三色不变式</strong></p>
+<p>Go 1.3版本：普通标记清除法，整体过程需要启动STW，效率极低。<br>Go 1.5版本：三色标记法， 堆空间启动写屏障，栈空间不启动，全部扫描之后，需要重新扫描一次栈(需要STW)，效率普通<br>Go 1.8版本：三色标记法，混合写屏障机制， 栈空间不启动，堆空间启动。整个过程几乎不需要STW，效率较高。</p>
+<h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><p>Go是内置运行时的编程语言(runtime)，像这种内置运行时的编程语言通常会抛弃传统的内存分配方式，改为自己管理。这样可以完成类似预分配、内存池等操作，以避开系统调用带来的性能问题，防止每次分配内存都需要系统调用。</p>
+<p>Go的内存分配的核心思想可以分为以下几点：</p>
+<ol>
+<li>每次从操作系统申请一大块儿的内存，由Go来对这块儿内存做分配，减少系统调用</li>
+<li>内存分配算法采用Google的TCMalloc算法。算法比较复杂，究其原理可自行查阅。其核心思想就是把内存切分的非常的细小，分为多级管理，以降低锁的粒度。</li>
+<li>回收对象内存时，并没有将其真正释放掉，只是放回预先分配的大块内存中，以便复用。只有内存闲置过多的时候，才会尝试归还部分内存给操作系统，降低整体开销</li>
+</ol>
+<h3 id="Go的内存结构"><a href="#Go的内存结构" class="headerlink" title="Go的内存结构"></a>Go的内存结构</h3><p>Go在程序启动的时候，会分配一块连续的内存(虚拟内存)。整体如下：图中span和bitmap的大小会随着heap的改变而改变</p>
+<p><img data-src="/transblog/images/269295915250151.png"></p>
+<h4 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h4><p>arena区域就是我们通常所说的heap。</p>
+<h4 id="spans"><a href="#spans" class="headerlink" title="spans"></a>spans</h4><p>spans区域，可以认为是用于上面所说的管理分配arena(即heap)的区域。<br>此区域存放了mspan的指针，spans区域用于表示arena区中的某一页(page)属于哪个mspan。</p>
+<p><img data-src="/transblog/images/61650216268577.png"></p>
+<p>思考下面的问题，假如再分配“p4”的时候，是不是内存不足没法分配了？是不是有很多碎片？<br><img data-src="/transblog/images/351170516256444.png"></p>
+<p>go的解决方式：按需分配<br>go将内存块分为大小不同的67种，然后再把这67种大内存块，逐个分为小块(可以理解为大小不同的page)，称之为span(连续的page)，在go语言中就是上文提及的mspan</p>
+<p><img data-src="/transblog/images/33920716276610.png"></p>
+<p>对象分配的时候，根据对象的大小选择大小相近的span，这样，碎片问题就解决了。</p>
+<p>在源码 src&#x2F;runtime&#x2F;sizeclasses.go,可以查到所有的 span 类型，67中不同大小的span代码注释如下(go版本1.11)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">// class  bytes/obj  bytes/span  objects  tail waste  max waste</span><br><span class="line">//     1          8        8192     1024           0     87.50%</span><br><span class="line">//     2         16        8192      512           0     43.75%</span><br><span class="line">//     3         32        8192      256           0     46.88%</span><br><span class="line">//     4         48        8192      170          32     31.52%</span><br><span class="line">//     5         64        8192      128           0     23.44%</span><br><span class="line">//     6         80        8192      102          32     19.07%</span><br><span class="line">//     7         96        8192       85          32     15.95%</span><br><span class="line">//     8        112        8192       73          16     13.56%</span><br><span class="line">//     9        128        8192       64           0     11.72%</span><br><span class="line">//    10        144        8192       56         128     11.82%</span><br><span class="line">//    11        160        8192       51          32      9.73%</span><br><span class="line">//    12        176        8192       46          96      9.59%</span><br><span class="line">//    13        192        8192       42         128      9.25%</span><br><span class="line">//    14        208        8192       39          80      8.12%</span><br><span class="line">//    15        224        8192       36         128      8.15%</span><br><span class="line">//    16        240        8192       34          32      6.62%</span><br><span class="line">//    17        256        8192       32           0      5.86%</span><br><span class="line">//    18        288        8192       28         128     12.16%</span><br><span class="line">//    19        320        8192       25         192     11.80%</span><br><span class="line">//    20        352        8192       23          96      9.88%</span><br><span class="line">//    21        384        8192       21         128      9.51%</span><br><span class="line">//    22        416        8192       19         288     10.71%</span><br><span class="line">//    23        448        8192       18         128      8.37%</span><br><span class="line">//    24        480        8192       17          32      6.82%</span><br><span class="line">//    25        512        8192       16           0      6.05%</span><br><span class="line">//    26        576        8192       14         128     12.33%</span><br><span class="line">//    27        640        8192       12         512     15.48%</span><br><span class="line">//    28        704        8192       11         448     13.93%</span><br><span class="line">//    29        768        8192       10         512     13.94%</span><br><span class="line">//    30        896        8192        9         128     15.52%</span><br><span class="line">//    31       1024        8192        8           0     12.40%</span><br><span class="line">//    32       1152        8192        7         128     12.41%</span><br><span class="line">//    33       1280        8192        6         512     15.55%</span><br><span class="line">//    34       1408       16384       11         896     14.00%</span><br><span class="line">//    35       1536        8192        5         512     14.00%</span><br><span class="line">//    36       1792       16384        9         256     15.57%</span><br><span class="line">//    37       2048        8192        4           0     12.45%</span><br><span class="line">//    38       2304       16384        7         256     12.46%</span><br><span class="line">//    39       2688        8192        3         128     15.59%</span><br><span class="line">//    40       3072       24576        8           0     12.47%</span><br><span class="line">//    41       3200       16384        5         384      6.22%</span><br><span class="line">//    42       3456       24576        7         384      8.83%</span><br><span class="line">//    43       4096        8192        2           0     15.60%</span><br><span class="line">//    44       4864       24576        5         256     16.65%</span><br><span class="line">//    45       5376       16384        3         256     10.92%</span><br><span class="line">//    46       6144       24576        4           0     12.48%</span><br><span class="line">//    47       6528       32768        5         128      6.23%</span><br><span class="line">//    48       6784       40960        6         256      4.36%</span><br><span class="line">//    49       6912       49152        7         768      3.37%</span><br><span class="line">//    50       8192        8192        1           0     15.61%</span><br><span class="line">//    51       9472       57344        6         512     14.28%</span><br><span class="line">//    52       9728       49152        5         512      3.64%</span><br><span class="line">//    53      10240       40960        4           0      4.99%</span><br><span class="line">//    54      10880       32768        3         128      6.24%</span><br><span class="line">//    55      12288       24576        2           0     11.45%</span><br><span class="line">//    56      13568       40960        3         256      9.99%</span><br><span class="line">//    57      14336       57344        4           0      5.35%</span><br><span class="line">//    58      16384       16384        1           0     12.49%</span><br><span class="line">//    59      18432       73728        4           0     11.11%</span><br><span class="line">//    60      19072       57344        3         128      3.57%</span><br><span class="line">//    61      20480       40960        2           0      6.87%</span><br><span class="line">//    62      21760       65536        3         256      6.25%</span><br><span class="line">//    63      24576       24576        1           0     11.45%</span><br><span class="line">//    64      27264       81920        3         128     10.00%</span><br><span class="line">//    65      28672       57344        2           0      4.91%</span><br><span class="line">//    66      32768       32768        1           0     12.50%</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>class： class ID，每个span结构中都有一个class ID, 表示该span可处理的对象类型</li>
+<li>bytes&#x2F;obj：该class代表对象的字节数</li>
+<li>bytes&#x2F;span：每个span占用堆的字节数，也即页数*页大小</li>
+<li>objects: 每个span可分配的对象个数，也即（bytes&#x2F;spans）&#x2F;（bytes&#x2F;obj）</li>
+<li>waste bytes: 每个span产生的内存碎片，也即（bytes&#x2F;spans）%（bytes&#x2F;obj）</li>
+</ul>
+<p>以类型(class)为1的span为例,span中的元素大小是8 byte, span本身占1页也就是8K, 一共可以保存1024个对象。</p>
+<p>细心的同学可能会发现代码中一共有66种，还有一种特殊的span：即对于大于32k的对象出现时，会直接从heap分配一个特殊的span，这个特殊的span的类型(class)是0, 只包含了一个大对象, span的大小由对象的大小决定。</p>
+<h4 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h4><p>bitmap 有好几种:Stack, data, and bss bitmaps和heap bitmaps。</p>
+<p>在此bitmap的作用是标记arena(即heap)中的对象。<strong>一是标记对应地址中是否存在对象，另外是标记此对象是否被gc标记过</strong>。一个功能一个bit位，所以，heap bitmaps用两个bit位。</p>
+<p>bitmap区域中的一个byte对应arena区域的四个指针大小的内存的结构如下：</p>
+<p><img data-src="/transblog/images/552064516279468.png"></p>
+<p>bitmap的地址是由高地址向低地址增长的。</p>
+<p><img data-src="/transblog/images/227274616277072.png"></p>
+<p>arena中包含基本的管理单元和程序运行时候生成的对象或实体，这两部分分别被spans和bitmap这两块非heap区域的内存所对应着。</p>
+<p><img data-src="/transblog/images/105724716274574.png"></p>
+<h3 id="Go的内存管理组件"><a href="#Go的内存管理组件" class="headerlink" title="Go的内存管理组件"></a>Go的内存管理组件</h3><ol>
+<li>mspan：为内存管理的基础单元，直接存储数据的地方。</li>
+<li>mcache：每个运行期的goroutine都会绑定的一个mcache(具体来讲是绑定的GMP并发模型中的P，所以可以无锁分配mspan)，mcache会分配goroutine运行中所需要的内存空间(即mspan)。</li>
+<li>mcentral：为所有mcache切分好后备的mspan</li>
+<li>mheap：代表Go程序持有的所有堆空间。还会管理闲置的span，需要时向操作系统申请新内存。</li>
+</ol>
+<h4 id="mspan"><a href="#mspan" class="headerlink" title="mspan"></a>mspan</h4><p><strong>mspan可以说是go内存管理的最基本单元，page是内存存储的基本单元</strong>。</p>
+<p>mspan(源码：src&#x2F;runtime&#x2F;mheap.go)是包含了 n 个页的集合,内部有两个字段startAddr和npages,分别代表 page 的开始地址,和一共几个 page. 还有spanclass字段表示该 mspan 是哪种对象的集合(上述定义的 67 种的一种)</p>
+<p>spans 里面存放了 mspan 的集合,每个 mspan 里面存放 n 个page ,span 内部的 page 一定是连续的</p>
+<p><img data-src="/transblog/images/149224216261588.png"></p>
+<p><strong>mspan结构本身的内存是从系统分配的，且是双向链表</strong></p>
+<h4 id="mcache"><a href="#mcache" class="headerlink" title="mcache"></a>mcache</h4><p>为了避免多线程申请内存时不断的加锁，goroutine为每个线程分配了span内存块的缓存，这个缓存即是mcache。</p>
+<p>mcache (源码：src&#x2F;runtime&#x2F;mcache.go)是绑定在GMP模型中 P 上的缓存对象，每个goroutine都会绑定的一个mcache，各个goroutine申请内存时不存在锁竞争的情况。<br><a href="#target1">点击此处跳转到：Go协程调度</a><br><img data-src="/transblog/images/228075316255815.png"><br>如何做到的？因为运行期间一个goroutine只能和一个P关联，而mcache就在P上，所以，不可能有锁的竞争。</p>
+<p><img data-src="/transblog/images/444010417273391.png"></p>
+<p>mcache中的span链表分为两组，一组是包含指针类型的对象，另一组是不包含指针类型的对象。主要是方便GC，在进行垃圾回收的时候，对于不包含指针的对象列表无需进一步扫描是否引用其他活跃的对象。<a href="#target2">点击此处跳转到：Go垃圾回收</a><br><img data-src="/transblog/images/60135616278255.png"></p>
+<h4 id="mcentral"><a href="#mcentral" class="headerlink" title="mcentral"></a>mcentral</h4><p>mcentral(源码：src&#x2F;runtime&#x2F;mcentral.go)为所有mcache提供切分好的mspan,但是保存了从 mheap 申请的内存块,包括带指针和不带指针的, 67 种类型.每一种类型对应一个 mcentral，每个mcentral保存一种特定类型的全局mspan列表。 </p>
+<p><img data-src="/transblog/images/562090517266937.png"></p>
+<p>有多少种类型的mspan就有多少个mcentral。每个mcentral都会包含两个mspan的列表：</p>
+<ol>
+<li>没有空闲对象或mspan已经被mcache缓存的mspan列表(empty mspanList)</li>
+<li>有空闲对象的mspan列表(empty mspanList)</li>
+</ol>
+<p><img data-src="/transblog/images/594141217250601.png"></p>
+<p>由于mspan是全局的，会被所有的mcache访问，所以会出现并发性问题，因而mcentral会存在一个锁。</p>
+<p>单个的mcentral结构如下：</p>
+<p><img data-src="/transblog/images/388160717260071.png"></p>
+<p>假如需要分配内存时，mcentral没有空闲的mspan列表了，此时需要向mheap去获取。</p>
+<h4 id="mheap"><a href="#mheap" class="headerlink" title="mheap"></a>mheap</h4><p>mheap(源码：src&#x2F;runtime&#x2F;mheap.go)保存了全局的对象,从内存分配的对象先由 mheap 托管,同时,大文件(&gt;32KB)文件也是直接从 mheap 申请,拥有全局锁</p>
+<p>mheap可以认为是Go程序持有的整个堆空间，mheap全局唯一，可以认为是个全局变量。</p>
+<p><img data-src="/transblog/images/59261617253105.png"></p>
+<p>这个lock是作用是什么呢？</p>
+<p>大对象直接通过mheap 分配，这些大对象的申请是由mcache发出的，而mcache在P上，程序运行的时候往往会存在多个P，因此，这个内存申请是并发的；所以为了保证线程安全，必须有一个全局锁。</p>
+<p>假如需要分配的内存时，mheap中也没有了，则向操作系统申请一系列新的页（最小 1MB）。</p>
+<h3 id="Go的内存分配"><a href="#Go的内存分配" class="headerlink" title="Go的内存分配"></a>Go的内存分配</h3><ol>
+<li>微对象 (&lt;16B)<br>有一个微型分配器tiny allocator来分配，分配的对象都是不包含指针的，例如一些小的字符串和不包含指针的独立的逃逸变量等</li>
+<li>小对象(16B~32KB)<br>就是mcache根据对象的大小来找自身存在的大小相匹配mspan来分配。又分为 67 种</li>
+<li>大对象(&gt;32KB)<br>大对象直接从 mheap 上申请,同时由于可能并发,所以一定是加锁获取的</li>
+</ol>
+<p>微对象和小对象都是直接通过mcache来分配的，<strong>小对象分配顺序：</strong></p>
+<ol>
+<li>首先去 mcache 中申请，由于 mcache 是绑定在 P (GMP) 上的，所以不会发生竞争，这块不用加锁，分配器根据申请的对象大小，向上取整，找到对应的 67 种类型的一种。</li>
+<li>当 mcache 中的该类型内存不够分配时，分配器去先去 mcentral 对应的类型下的 mspan 列表申请，然后放到P 的mcache 中，这个过程由于可能多个 goroutine 竞争，所以会有锁 </li>
+<li>当该类型的 mcentral 中的空间也不够时，分配器会去 mheap中申请，mheap 最后给 goroutine 分配 </li>
+<li>最后如果 mheap 中的内存也不够了，那么这时候，就需要重新去操作系统申请了(mmap)。</li>
+</ol>
+<p><img data-src="/transblog/images/167183317254937.png"></p>
+<p>整体内存分配示意图：</p>
+<p><img data-src="/transblog/images/595612317262052.png"></p>
+<h2 id="runtime包常用"><a href="#runtime包常用" class="headerlink" title="runtime包常用"></a>runtime包常用</h2><h3 id="runtime-GOMAXPROCS"><a href="#runtime-GOMAXPROCS" class="headerlink" title="runtime.GOMAXPROCS"></a>runtime.GOMAXPROCS</h3><p> runtime.GOMAXPROCS() 可以用来设置 P 的数量，一般设置为和逻辑 CPU  数量相等的值：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(runtime.NumCPU())</span><br><span class="line">runtime.GOMAXPROCS(runtime.NumCPU()) <span class="comment">// 使用所有的逻辑 CPU</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">我的主机 CPU 是<span class="number">16</span>核<span class="number">24</span>线程，所以会使用<span class="number">24</span>个 P</span><br></pre></td></tr></table></figure>
+
+<h3 id="runtime-Gosched"><a href="#runtime-Gosched" class="headerlink" title="runtime.Gosched"></a>runtime.Gosched</h3><p>runtime.Gosched() 用于让出当前协程的运行时间片，也就是当 P 遇到它时，会先安排其他协程先执行：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">5</span>; i++ &#123;</span><br><span class="line">			fmt.Println(<span class="string">&quot;go&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	runtime.Gosched()</span><br><span class="line">	fmt.Println(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">输入结果不是固定的，有可能是</span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line">hello</span><br><span class="line">也有可能是</span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span></span><br><span class="line">hello</span><br><span class="line"><span class="keyword">go</span></span><br><span class="line">也有可能是</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+<p>输出第一种情况容易理解，主协程让出了时间片，理所应当先打印 Go，但是如果子协程还没有来得及被调度或者打印，就会出现其他情况。</p>
+<h3 id="runtime-Goexit"><a href="#runtime-Goexit" class="headerlink" title="runtime.Goexit"></a>runtime.Goexit</h3><p>runtime.Goexit() 会结束当前的协程，但是 defer 语句会正常执行。此语法不能在主函数中使用，会引发 panic:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> fmt.Println(<span class="string">&quot;defer不受影响&quot;</span>)</span><br><span class="line">		fmt.Println(<span class="string">&quot;我被执行了&quot;</span>)</span><br><span class="line">		runtime.Goexit()</span><br><span class="line">		fmt.Println(<span class="string">&quot;我被跳过了&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">我被执行了</span><br><span class="line"><span class="keyword">defer</span>不受影响</span><br></pre></td></tr></table></figure>
+
+<h1 id="Go的变量逃逸"><a href="#Go的变量逃逸" class="headerlink" title="Go的变量逃逸"></a>Go的变量逃逸</h1><p>以一个问题进行举例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//test.c程序</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> * <span class="title function_">get_res</span><span class="params">(<span class="type">int</span> num)</span>&#123;</span><br><span class="line">    <span class="type">int</span> tmp = num + <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> &amp;tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">int</span> * res = get_res(<span class="number">80</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d  -- %p\n&quot;</span> , *res, res);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面写了一个简单的 C 代码，获取传入数据并 + 10 得到的结果</p>
+<p><img data-src="/transblog/images/98652016269279.png"></p>
+<p>这里可以看出编译程序，报了 warning 了，不过不影响程序的编译 ， 这个 warning 报错信息是 因为我们返回了临时变量的地址，C 编译器检测到了，给我们抛出了一个 warning。<br>执行编译的程序后，崩溃了 ，出现“段错误”的原因很明显，上面有说到，是因为外部访问了局部变量的地址，外部访问的时候，此时这个局部变量已经被销毁了，此时外部访问的这个指针，属于野指针，因此出现程序崩溃</p>
+<p> 熟悉 C 的小伙伴一点都不惊慌，他们不会写出这种代码，那么 go 程序的逻辑和上面 C 程序的逻辑一模一样，那么我们看看是否会出现程序崩溃呢</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//test.go程序</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getRes</span><span class="params">(num <span class="type">int</span>)</span></span> *<span class="type">int</span> &#123;</span><br><span class="line"> tmp := num + <span class="number">10</span></span><br><span class="line"> <span class="keyword">return</span> &amp;tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"> res := getRes(<span class="number">80</span>)</span><br><span class="line"> fmt.Printf(<span class="string">&quot;%d  -- %p\n&quot;</span>, *res, res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行上述代码，查看效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">go run main.go</span></span><br><span class="line">90  -- 0xc420018078</span><br></pre></td></tr></table></figure>
+<p>熟悉 go 语言的小伙伴看到这里心中也毫无波澜，程序正常执行，没有崩溃，因为他们知道原因，这个现象属于<strong>变量逃逸</strong></p>
+<p>go自己决定了内存分配，一个变量是分配在栈上面还是堆上面，不是简单的看一个变量是局部变量就分配到栈上，这个是根据具体的使用的，有时候它也会被分配到堆上面，<strong>当我们发现本应该分配在栈上面的变量，却分配在堆上面了，说明发生了逃逸</strong></p>
+<p>尝试写一个简单的 demo ，还是将局部变量的地址返回到外部去，外部来访问这个局部变量的地址</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getRes</span><span class="params">(tmp <span class="type">int</span>)</span></span> *<span class="type">int</span> &#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> t1 <span class="type">int</span> = <span class="number">1</span></span><br><span class="line"> <span class="keyword">var</span> t2 <span class="type">int</span> = <span class="number">2</span></span><br><span class="line"> <span class="keyword">var</span> t3 <span class="type">int</span> = <span class="number">3</span></span><br><span class="line"></span><br><span class="line"> <span class="built_in">println</span>(&amp;tmp, &amp;t1, &amp;t2, &amp;t3)</span><br><span class="line"></span><br><span class="line"> <span class="keyword">return</span> &amp;t2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"> res := getRes(<span class="number">80</span>)</span><br><span class="line"> <span class="built_in">println</span>(*res, res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行上述代码查看效果，通过将变量地址打印出来，貌似没有看出端倪，地址是也是连续的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">go run main.go</span></span><br><span class="line">0xc420045f50 0xc420045f68 0xc420045f60 0xc420045f58</span><br><span class="line">2 0xc420045f60</span><br></pre></td></tr></table></figure>
+
+
+<p>那么我们使用 go 提供的工具来看看这个程序是不是存在逃逸，执行 <code>go tool compile -m main.go</code>查看效果如下</p>
+<p><img data-src="/transblog/images/545232616265834.jpg"></p>
+<p>go tool compile 工具很明显的调试出来说明 t2 这个变量已经逃逸到堆上面去了，参数 -m 是直接查看是否逃逸，可以加 -S 会打印出具体的会变代码，查看该变量是否是 new 出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># go tool compile -S main.go | grep new</span><br><span class="line">0x0035 00053 (main.go:6)        CALL    runtime.newobject(SB)</span><br><span class="line">rel 54+4 t=8 runtime.newobject+0</span><br></pre></td></tr></table></figure>
+
+<h1 id="Go的使用"><a href="#Go的使用" class="headerlink" title="Go的使用"></a>Go的使用</h1><h2 id="Sort包"><a href="#Sort包" class="headerlink" title="Sort包"></a>Sort包</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sort</span><span class="params">(data Interface)</span></span></span><br></pre></td></tr></table></figure>
+<p>排序思想：</p>
+<ol>
+<li>当元素数目小于等于 12 时进行插入排序</li>
+<li>当元素数目大于 12 同时阈值为 0 时进行堆排序</li>
+<li>当元素数目大于 12 同时阈值不为 0 时进行快速排序，返回初次排序的分界值后重新进行元素数目判断排序</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://learnku.com/articles/46607">Sort排序原理详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a772304419/article/details/134355591">Sort包的用法</a></p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>闭包的核心特性在于其能够捕获并持有外部变量的引用。这意味着，即使外部函数已经返回，闭包仍然可以访问这些变量。<br><strong>Go语言中的闭包通过捕获外部变量的引用来实现这一功能。当闭包捕获一个外部变量时，该变量不会随函数的结束而销毁，而是继续存在于堆内存中，直到闭包本身不再被引用</strong>。<br>以下是一个简单的示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">adder</span><span class="params">()</span></span> <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    sum := <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(x <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">        sum += x</span><br><span class="line">        <span class="keyword">return</span> sum</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">     valueFunc:= adder()</span><br><span class="line">     fmt.Println(valueFunc(<span class="number">2</span>))     <span class="comment">// output: 2</span></span><br><span class="line">     fmt.Println(valueFunc(<span class="number">2</span>))   <span class="comment">// output: 4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/transblog/images/151565411250265.jpg"></p>
+<ol>
+<li>函数调用栈 (Stack)</li>
+</ol>
+<ul>
+<li><ul>
+<li>在程序执行时，main 函数被调用，其栈帧（stack frame）会被压入调用栈中。</li>
+</ul>
+</li>
+<li><ul>
+<li>main 函数调用了 adder 函数，adder 函数的栈帧同样会被压入调用栈。</li>
+</ul>
+</li>
+<li><ul>
+<li>在 adder 函数中，定义了局部变量 sum，初始值为 0。虽然 sum 是在 adder 的栈帧中声明的，但由于闭包的* 存在，它被捕获并存储在堆（heap）中。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>堆 (Heap)</li>
+</ol>
+<ul>
+<li><ul>
+<li>堆中存储了变量 sum，当 adder 函数返回匿名函数时，sum 变量被绑定在这个返回的函数对象中，匿名函数对象和捕获的 sum 在堆中分配内存。</li>
+</ul>
+</li>
+<li><ul>
+<li>由于 sum 是被闭包捕获的变量，它的值在 adder 函数返回后不会被销毁，而是被保留以供后续的函数调用。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>闭包捕获</li>
+</ol>
+<ul>
+<li><ul>
+<li>当 main 函数调用 valueFunc(2) 时，匿名函数被调用，sum 的值被更新并存储在堆中。每次调用 valueFunc 时，sum 的值会根据传入的参数累加并更新其在堆中的值。</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>输出结果</li>
+</ol>
+<ul>
+<li><ul>
+<li>第一次调用 valueFunc(2) 时，sum 变为 2。</li>
+</ul>
+</li>
+<li><ul>
+<li>第二次调用 valueFunc(2) 时，sum 变为 4。这说明闭包捕获的变量 sum 在多次调用中保留了其状态。</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="/transblog/images/221024615256558.jpg"></p>
+<h1 id="Go的channel"><a href="#Go的channel" class="headerlink" title="Go的channel"></a>Go的channel</h1><p>channel(通道)用于goroutine(协程)之间的通信。它提供了一种在不同协程之间传递数据的机制。channel是一种类型安全的、阻塞的、先进先出（FIFO）的数据结构，确保发送的数据按照发送的顺序接收。Go语言提供通过通信来共享内存，而不是通过共享内存来通信</p>
+<p>默认情况下，读写未就绪的channel（读没有数据的channel，或写缓冲区已经满了的channel）时，协程会阻塞。但是当读写channel操作和select搭配操作时，即使channel没有准备就绪，也可以执行其他分支，当前协程并不会阻塞</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>)</span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> &lt;-ch:</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>channel的底层源码和相关实现在src&#x2F;runtime&#x2F;chan.go中，channel设计的核心数据结构包含以下三个：</p>
+<h2 id="hchan"><a href="#hchan" class="headerlink" title="hchan"></a>hchan</h2><p>hchan是channel底层的数据结构，其核心是由数组实现的一个环形缓冲区</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//channel</span></span><br><span class="line"><span class="keyword">type</span> hchan <span class="keyword">struct</span> &#123;</span><br><span class="line">	qcount   <span class="type">uint</span>           <span class="comment">// total data in the queue 通道中数据个数</span></span><br><span class="line">	dataqsiz <span class="type">uint</span>           <span class="comment">// size of the circular queue 数据缓冲buf长度</span></span><br><span class="line">	buf      unsafe.Pointer <span class="comment">// points to an array of dataqsiz elements 数组指针，存储对应的channel数据</span></span><br><span class="line">	elemsize <span class="type">uint16</span> <span class="comment">//元素大小 channel 元素大小</span></span><br><span class="line">	closed   <span class="type">uint32</span> <span class="comment">//通道关闭标志 </span></span><br><span class="line">	elemtype *_type <span class="comment">// element type channel 元素类型</span></span><br><span class="line">	sendx    <span class="type">uint</span>   <span class="comment">// send index  写入数据的index</span></span><br><span class="line">	recvx    <span class="type">uint</span>   <span class="comment">// receive index 读取数据的index</span></span><br><span class="line">	recvq    waitq  <span class="comment">// list of recv waiters 由双向链表实现的recv waiters 队列 阻塞读操作的gorotinue队列</span></span><br><span class="line">	sendq    waitq  <span class="comment">// list of send waiters 由双向链表实现的send waiters队列 阻塞写操作的gorotinue队列</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// lock protects all fields in hchan, as well as several</span></span><br><span class="line">	<span class="comment">// fields in sudogs blocked on this channel.</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Do not change another G&#x27;s status while holding this lock</span></span><br><span class="line">	<span class="comment">// (in particular, do not ready a G), as this can deadlock</span></span><br><span class="line">	<span class="comment">// with stack shrinking.</span></span><br><span class="line">	lock mutex <span class="comment">//锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/transblog/images/45341710255547.png"></p>
+<h2 id="waitq"><a href="#waitq" class="headerlink" title="waitq"></a>waitq</h2><p>waitq 是因读写channel而陷入阻塞的协程等待队列，hchan的recvq和sendq使用这种数据结构，本质是双向链表</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//等待队列（双向链表）</span></span><br><span class="line"><span class="keyword">type</span> waitq <span class="keyword">struct</span>&#123;</span><br><span class="line">	first *sudog    <span class="comment">//队列头部</span></span><br><span class="line">	last *sudog     <span class="comment">//队列尾部</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="sudog"><a href="#sudog" class="headerlink" title="sudog"></a>sudog</h2><p>sudog 是协程等待队列的节点</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> sudog <span class="keyword">struct</span>&#123;</span><br><span class="line">	g *g <span class="comment">//等待读取或写入的协程g，即因读写channel而陷入阻塞的协程</span></span><br><span class="line">	next *sudog<span class="comment">//等待队列下一个节点</span></span><br><span class="line">	prev *sudog<span class="comment">//等待队列上一个节点</span></span><br><span class="line">	elem unsafe,Pointer	 <span class="comment">//对于写channel 是需要发送的数据指针，对于读channel是目标需要复制的数据指针</span></span><br><span class="line">	success <span class="type">bool</span> <span class="comment">//标记协程g被唤醒是因为数据传递（true）还是channle被关闭（false）</span></span><br><span class="line">	c *hchan<span class="comment">//对应的channel指针</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分配内存"><a href="#分配内存" class="headerlink" title="分配内存"></a>分配内存</h2><ol>
+<li>如果是无缓冲channel，直接给hchan结构体分配内存并返回指针。</li>
+<li>如果是有缓冲channel，但元素不包含指针类型，则一次性为hchan结构体和底层循环数组分配连续内存并返回指针。（需要连续内存空间）</li>
+<li>如果是有缓冲channel，且元素包含指针类型，则分别分配hchan结构体内存和底层循环数组的内存并返回指针。（可以利用内存碎片）</li>
+</ol>
+<p>创建channel的主要实现是在makechan()函数中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makechan</span><span class="params">(t *chantype, size <span class="type">int</span>)</span></span> *hchan</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="发送数据"><a href="#发送数据" class="headerlink" title="发送数据"></a>发送数据</h2><p>如果channel的读等待队列中存在接收者goroutine，则为<strong>同步发送</strong>：</p>
+<ul>
+<li>无缓冲channel，不用经过channel直接将数据发送给第一个等待接收的goroutine，并将其唤醒等待调度。</li>
+<li>有缓冲channel，但是元素个数为0，不用经过channel（假装经过channel）直接将数据发送给第一个等待接收的goroutine，并将其唤醒等待调度。</li>
+</ul>
+<p>如果channel的读等待队列中不存在接收者goroutine：</p>
+<ul>
+<li>如果底层循环数组未满，那么把发送者携带的数据入队队尾，此为<strong>异步发送</strong></li>
+<li>如果底层循环数组已满或者是无缓冲channel，那么将当前goroutine加入写等待队列，并将其挂起，等待被唤醒，此为<strong>阻塞发送</strong></li>
+</ul>
+<p><img data-src="/transblog/images/6754210264715.jpg"></p>
+<h2 id="接收数据"><a href="#接收数据" class="headerlink" title="接收数据"></a>接收数据</h2><p>如果 channel 的写等待队列存在发送者 goroutine，此为<strong>同步接收</strong>：</p>
+<ul>
+<li>如果是无缓冲 channel，直接从第一个发送者 goroutine 那里把数据拷贝给接收变量，唤醒发送的 goroutine；</li>
+<li>如果是有缓冲 channel（已满），将循环数组 buf 的队首元素拷贝给接收变量，将第一个发送者 goroutine 的数据拷贝到 buf 循环数组队尾，唤醒发送的 goroutine；</li>
+</ul>
+<p>如果 channel 的写等待队列不存在发送者 goroutine：</p>
+<ul>
+<li>如果循环数组 buf 非空，将循环数组 buf 的队首元素拷贝给接收变量，此为<strong>异步接收</strong></li>
+<li>如果循环数组 buf 为空，将当前 goroutine 加入读等待队列，并挂起等待唤醒，此为<strong>阻塞接收</strong></li>
+</ul>
+<p><img data-src="/transblog/images/80344310254013.jpg"></p>
+<h2 id="关闭channel"><a href="#关闭channel" class="headerlink" title="关闭channel"></a>关闭channel</h2><p>关闭操作在编译时转换为closechan()函数，总体流程如下：</p>
+<ol>
+<li>边界检查</li>
+<li>从recvq释放所有的readers</li>
+<li>从sendq释放所有的writers（会产生panic）</li>
+<li>唤醒所有的readers和writers</li>
+</ol>
+<h1 id="———-请稍等————–"><a href="#———-请稍等————–" class="headerlink" title="———-请稍等————–"></a>———-请稍等————–</h1><link rel="stylesheet" href="/transblog/css/spoiler.css" type="text/css"><script src="/transblog/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>给耶耶买杯咖啡喝</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/weixin_reward.jpg" alt="trans-xu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/zhifubao_reward.jpg" alt="trans-xu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/C++/" rel="prev" title="C++">
+      <i class="fa fa-chevron-left"></i> C++
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/Mysql/" rel="next" title="Mysql">
+      Mysql <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">整型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E5%9E%8B%E2%80%93float"><span class="nav-number">1.2.</span> <span class="nav-text">浮点型–float</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%95%B0%E5%9E%8B%E2%80%93complex"><span class="nav-number">1.3.</span> <span class="nav-text">复数型–complex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%9E%8B%E2%80%93byte"><span class="nav-number">1.4.</span> <span class="nav-text">字符和字符串型–byte</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B%E2%80%93error"><span class="nav-number">1.5.</span> <span class="nav-text">错误类型–error</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E5%9E%8B%E2%80%93bool"><span class="nav-number">1.6.</span> <span class="nav-text">布尔型–bool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.7.</span> <span class="nav-text">数组类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%87%E7%89%87%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.8.</span> <span class="nav-text">切片类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E5%8C%BA%E5%88%AB"><span class="nav-number">1.8.1.</span> <span class="nav-text">数组和切片区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B%E2%80%93map"><span class="nav-number">1.9.</span> <span class="nav-text">映射类型–map</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#map%E4%BD%BF%E7%94%A8"><span class="nav-number">1.9.1.</span> <span class="nav-text">map使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map%E5%8E%9F%E7%90%86"><span class="nav-number">1.9.2.</span> <span class="nav-text">map原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.9.2.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E8%BF%87%E7%A8%8B"><span class="nav-number">1.9.2.2.</span> <span class="nav-text">插入过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E8%BF%87%E7%A8%8B"><span class="nav-number">1.9.2.3.</span> <span class="nav-text">查找过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-number">1.9.2.4.</span> <span class="nav-text">扩容机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%8C%E5%80%8D%E6%89%A9%E5%AE%B9"><span class="nav-number">1.9.2.4.1.</span> <span class="nav-text">双倍扩容</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AD%89%E9%87%8F%E6%89%A9%E5%AE%B9"><span class="nav-number">1.9.2.4.2.</span> <span class="nav-text">等量扩容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8"><span class="nav-number">1.9.3.</span> <span class="nav-text">线程不安全</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sync-Mutex-%E8%BF%9B%E8%A1%8C%E5%90%8C%E6%AD%A5"><span class="nav-number">1.9.3.1.</span> <span class="nav-text">使用 sync.Mutex 进行同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sync-RWMutex-%E8%BF%9B%E8%A1%8C%E8%AF%BB%E5%86%99%E9%94%81"><span class="nav-number">1.9.3.2.</span> <span class="nav-text">使用 sync.RWMutex 进行读写锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sync-Map"><span class="nav-number">1.9.3.3.</span> <span class="nav-text">使用 sync.Map</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%B1%BB%E2%80%93struct"><span class="nav-number">1.10.</span> <span class="nav-text">结构体类–struct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E7%B1%BB%E5%9E%8B%E2%80%93interface"><span class="nav-number">1.11.</span> <span class="nav-text">接口类型–interface</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B%E2%80%93func"><span class="nav-number">1.12.</span> <span class="nav-text">函数类型–func</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF"><span class="nav-number">2.</span> <span class="nav-text">Go实现继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%80%9A%E8%BF%87%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97%E8%BF%9B%E8%A1%8C%E7%BB%84%E5%90%88"><span class="nav-number">2.1.</span> <span class="nav-text">1. 通过结构体嵌套进行组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%87%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E5%A4%9A%E6%80%81%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">2. 通过接口实现多态性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%80%9A%E8%BF%87%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD%E5%85%B1%E4%BA%AB"><span class="nav-number">2.3.</span> <span class="nav-text">3. 通过方法实现功能共享</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">3.</span> <span class="nav-text">函数参数传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-Runtime"><span class="nav-number">4.</span> <span class="nav-text">Go Runtime</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">4.1.</span> <span class="nav-text">协程调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%88GC%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">垃圾回收（GC）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4-%E7%AE%97%E6%B3%95"><span class="nav-number">4.2.1.</span> <span class="nav-text">标记-清除 算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E6%B3%95"><span class="nav-number">4.2.2.</span> <span class="nav-text">三色标记法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E4%B8%89%E8%89%B2%E4%B8%8D%E5%8F%98%E6%80%A7"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">两种三色不变性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%8F%E9%9A%9C%E6%8A%80%E6%9C%AF"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">屏障技术</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">4.2.2.2.1.</span> <span class="nav-text">插入写屏障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">4.2.2.2.2.</span> <span class="nav-text">删除写屏障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">4.2.2.2.3.</span> <span class="nav-text">混合写屏障</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80"><span class="nav-number">4.2.2.2.3.1.</span> <span class="nav-text">场景一</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C"><span class="nav-number">4.2.2.2.3.2.</span> <span class="nav-text">场景二</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89"><span class="nav-number">4.2.2.2.3.3.</span> <span class="nav-text">场景三</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%9B%9B"><span class="nav-number">4.2.2.2.3.4.</span> <span class="nav-text">场景四</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">4.3.</span> <span class="nav-text">内存分配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">4.3.1.</span> <span class="nav-text">Go的内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#arena"><span class="nav-number">4.3.1.1.</span> <span class="nav-text">arena</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spans"><span class="nav-number">4.3.1.2.</span> <span class="nav-text">spans</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bitmap"><span class="nav-number">4.3.1.3.</span> <span class="nav-text">bitmap</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%BB%84%E4%BB%B6"><span class="nav-number">4.3.2.</span> <span class="nav-text">Go的内存管理组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mspan"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">mspan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mcache"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">mcache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mcentral"><span class="nav-number">4.3.2.3.</span> <span class="nav-text">mcentral</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mheap"><span class="nav-number">4.3.2.4.</span> <span class="nav-text">mheap</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">4.3.3.</span> <span class="nav-text">Go的内存分配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#runtime%E5%8C%85%E5%B8%B8%E7%94%A8"><span class="nav-number">4.4.</span> <span class="nav-text">runtime包常用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime-GOMAXPROCS"><span class="nav-number">4.4.1.</span> <span class="nav-text">runtime.GOMAXPROCS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime-Gosched"><span class="nav-number">4.4.2.</span> <span class="nav-text">runtime.Gosched</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime-Goexit"><span class="nav-number">4.4.3.</span> <span class="nav-text">runtime.Goexit</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E7%9A%84%E5%8F%98%E9%87%8F%E9%80%83%E9%80%B8"><span class="nav-number">5.</span> <span class="nav-text">Go的变量逃逸</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">Go的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sort%E5%8C%85"><span class="nav-number">6.1.</span> <span class="nav-text">Sort包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85"><span class="nav-number">6.2.</span> <span class="nav-text">闭包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go%E7%9A%84channel"><span class="nav-number">7.</span> <span class="nav-text">Go的channel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hchan"><span class="nav-number">7.1.</span> <span class="nav-text">hchan</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waitq"><span class="nav-number">7.2.</span> <span class="nav-text">waitq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sudog"><span class="nav-number">7.3.</span> <span class="nav-text">sudog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="nav-number">7.4.</span> <span class="nav-text">分配内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE"><span class="nav-number">7.5.</span> <span class="nav-text">发送数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">7.6.</span> <span class="nav-text">接收数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%97%ADchannel"><span class="nav-number">7.7.</span> <span class="nav-text">关闭channel</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E2%80%94%E2%80%94%E2%80%94-%E8%AF%B7%E7%A8%8D%E7%AD%89%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%93"><span class="nav-number">8.</span> <span class="nav-text">———-请稍等————–</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">trans-xu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/transblog/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/transblog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">trans-xu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">401k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:04</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/transblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/transblog/js/utils.js"></script>
+
+<script src="/transblog/js/motion.js"></script>
+
+
+<script src="/transblog/js/schemes/muse.js"></script>
+
+
+<script src="/transblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/transblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'yAoX6gn7GI1DLsEMuYu9H1Tn-gzGzoHsz',
+      appKey     : 'IYT4u4yNOKXWtyvKYfcTgfKb',
+      placeholder: "留下你想说的",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

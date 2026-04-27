@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/transblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/transblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/transblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/transblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/transblog/css/main.css">
+
+
+<link rel="stylesheet" href="/transblog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trans-xu.github.io","root":"/transblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="抢到红包0.01元，怎么搞的？抢红包时你为什么只抢到0.01，拼手气红包的随机是如何运作的？最初的随机算法中，领取越早获得大额红包几率越高，为了避免抢红包变成一个拼手速的游戏，后来的随机算法也对随机范围区间进行了一定调整。 普通随机剩余值随机红包算法 ，一般都是使用剩余值在计算一把。用余下的值为最大区间进行随机，但可能不均匀，有些人一把随到99，下面很多人都没得随机了。 优点：逻辑简单，缺点：随机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拼手气红包只抢了0.01">
+<meta property="og:url" content="https://trans-xu.github.io/transblog/2025/08/27/%E7%BA%A2%E5%8C%85%E7%AE%97%E6%B3%95%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%95%B0/index.html">
+<meta property="og:site_name" content="一只萨摩耶的博客">
+<meta property="og:description" content="抢到红包0.01元，怎么搞的？抢红包时你为什么只抢到0.01，拼手气红包的随机是如何运作的？最初的随机算法中，领取越早获得大额红包几率越高，为了避免抢红包变成一个拼手速的游戏，后来的随机算法也对随机范围区间进行了一定调整。 普通随机剩余值随机红包算法 ，一般都是使用剩余值在计算一把。用余下的值为最大区间进行随机，但可能不均匀，有些人一把随到99，下面很多人都没得随机了。 优点：逻辑简单，缺点：随机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/408022611264994.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/142184411246235.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/426334411268675.png">
+<meta property="article:published_time" content="2025-08-27T03:50:08.921Z">
+<meta property="article:modified_time" content="2025-08-27T03:36:56.580Z">
+<meta property="article:author" content="trans-xu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+
+<link rel="canonical" href="https://trans-xu.github.io/transblog/2025/08/27/%E7%BA%A2%E5%8C%85%E7%AE%97%E6%B3%95%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%95%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>拼手气红包只抢了0.01 | 一只萨摩耶的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/transblog/atom.xml" title="一只萨摩耶的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/transblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只萨摩耶的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员技术栈</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/transblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/transblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/transblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trans-xu.github.io/transblog/2025/08/27/%E7%BA%A2%E5%8C%85%E7%AE%97%E6%B3%95%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/transblog/images/avatar.gif">
+      <meta itemprop="name" content="trans-xu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只萨摩耶的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          拼手气红包只抢了0.01
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-27 11:36:56" itemprop="dateModified" datetime="2025-08-27T11:36:56+08:00">2025-08-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/transblog/categories/%E5%A5%87%E9%97%BB%E8%BD%B6%E4%BA%8B/" itemprop="url" rel="index"><span itemprop="name">奇闻轶事</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/transblog/2025/08/27/%E7%BA%A2%E5%8C%85%E7%AE%97%E6%B3%95%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%95%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/transblog/2025/08/27/%E7%BA%A2%E5%8C%85%E7%AE%97%E6%B3%95%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%95%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="抢到红包0-01元，怎么搞的？"><a href="#抢到红包0-01元，怎么搞的？" class="headerlink" title="抢到红包0.01元，怎么搞的？"></a>抢到红包0.01元，怎么搞的？</h1><p><strong>抢红包时你为什么只抢到0.01，拼手气红包的随机是如何运作的？</strong><br>最初的随机算法中，领取越早获得大额红包几率越高，为了避免抢红包变成一个拼手速的游戏，后来的随机算法也对随机范围区间进行了一定调整。</p>
+<h2 id="普通随机"><a href="#普通随机" class="headerlink" title="普通随机"></a>普通随机</h2><p>剩余值随机红包算法 ，一般都是使用剩余值在计算一把。用余下的值为最大区间进行随机，但可能不均匀，有些人一把随到99，下面很多人都没得随机了。</p>
+<p>优点：逻辑简单，<br>缺点：随机区间步步减少，可以明显看出随机值的递减特性，做抢红包体验很差，对后面玩家极不公平，且容易被抓到规律，造成舆论不满。</p>
+<h2 id="二倍均值算法"><a href="#二倍均值算法" class="headerlink" title="二倍均值算法"></a>二倍均值算法</h2><p>该算法的核心思想：<br>在每次剩余的总金额和剩余人数的基础上，执行一个操作：将剩余总金额除以剩余人数，然后乘以2，得到一个边界值E。接着，在从0到E的随机区间内生成一个随机金额R，此时总金额更新为M-R，剩余人数更新为N-1。这个过程重复进行，直到最终剩余人数N-1为0，即所有随机数已经产生完毕。</p>
+<p><img data-src="/transblog/images/435884609258196.png"></p>
+<ol>
+<li>剩余红包金额为M，剩余人数为N，每次抢到的金额 &#x3D; 随机区间 （0， M &#x2F; N X 2），</li>
+<li>假设有10个人，红包总额100元。</li>
+<li>100&#x2F;10X2 &#x3D; 20, 所以第一个人的随机范围是（0，20 )，平均可以抢到10元。</li>
+<li>假设第一个人随机到10元，那么剩余金额是100-10 &#x3D; 90 元。</li>
+<li>90&#x2F;9X2 &#x3D; 20, 所以第二个人的随机范围同样是（0，20 )，平均可以抢到10元。</li>
+<li>假设第二个人随机到10元，那么剩余金额是90-10 &#x3D; 80 元。</li>
+<li>80&#x2F;8X2 &#x3D; 20, 所以第三个人的随机范围同样是（0，20 )，平均可以抢到10元。</li>
+<li>以此类推，每一次随机范围的均值是相等的。</li>
+</ol>
+<p>此外，二倍均值算法还基于一个公平的概率策略：即每个人抢到J &#x2F; N的金额的概率是相同的。例如，如果有一个100元的红包要发给10个人，那么最公平的策略是使每个人抢到10元的概率相同。通过计算随机数区间上界U &#x3D; J &#x2F; N * 2，并在(0,U)的区间内生成第一个随机数金额M，然后继续生成第二个、第三个等随机金额，直到最后一个红包金额被生成。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Double&gt; <span class="title function_">doubleMeanMethod</span><span class="params">(<span class="type">double</span> money,<span class="type">int</span> number)</span>&#123;</span><br><span class="line">		List&lt;Double&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Double&gt;();</span><br><span class="line">		<span class="keyword">if</span>(money&lt;<span class="number">0</span>&amp;&amp;number&lt;<span class="number">1</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">		<span class="type">double</span> amount,sum=<span class="number">0</span>;</span><br><span class="line">		<span class="type">int</span> remainingNumber=number;</span><br><span class="line">		<span class="type">int</span> i=<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(remainingNumber&gt;<span class="number">1</span>)&#123;</span><br><span class="line">			amount= nextDouble(<span class="number">0.01</span>,<span class="number">2</span>*(money/remainingNumber));</span><br><span class="line">			sum+=amount;</span><br><span class="line">			System.out.println(<span class="string">&quot;第&quot;</span>+i+<span class="string">&quot;个人领取的红包金额为：&quot;</span>+format(amount));</span><br><span class="line">			money -= amount;</span><br><span class="line">			remainingNumber--;</span><br><span class="line">			result.add(amount);</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">		result.add(money);</span><br><span class="line">		System.out.println(<span class="string">&quot;第&quot;</span>+i+<span class="string">&quot;个人领取的红包金额为：&quot;</span>+format(money));</span><br><span class="line">		sum+=money;</span><br><span class="line">		System.out.println(<span class="string">&quot;验证发出的红包总金额为：&quot;</span>+format(sum));</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>优点：</p>
+<ul>
+<li>它能够保证每次生成的随机金额R的随机性和平等性，同时由于每次总金额M的更新采用递减方式（即M&#x3D;M-R），可以确保最终产生的所有随机金额之和等于初始的总金额。</li>
+<li>这种算法通过在每次迭代中更新总金额和剩余人数，确保了每个人获得金额的平均值相等，避免了因抢红包的顺序不同而导致的分配不均问题。</li>
+</ul>
+<h2 id="线段分割算法"><a href="#线段分割算法" class="headerlink" title="线段分割算法"></a>线段分割算法</h2><p>我们将红包总额度比喻为一条同等长度的线段，如果有10个人领红包，我们就对其切割9次，线段就会分为时段，这时每人拿一段就达到了要求，非常的巧妙。</p>
+<p>计算过程：我们用数组或者List去模拟一条线段，第一个数是0，最后一个数是红包总额，有n个人抢红包我们就生成n-1个不同的随机数插入到0和红包总额之间，然后对数组或list中的数字大小进行排序，每个人拿到的金额就是后一个数减去前一个数之差。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">function lineSegmentRedbag($Moneys, $userNums, $isEveryHave = 1, $baseMoney = 1)</span><br><span class="line">&#123;</span><br><span class="line">     if ($Moneys &lt;= 0 || $userNums &lt;= 0) &#123;</span><br><span class="line">        return [&#x27;code&#x27; =&gt; -3, &#x27;msg&#x27; =&gt; &#x27;红包金额或拆红包总人数不合法&#x27;];</span><br><span class="line">    &#125;</span><br><span class="line">    if ($isEveryHave &amp;&amp; $userNums &gt; $Moneys) &#123;</span><br><span class="line">        return [&#x27;code&#x27; =&gt; -4, &#x27;msg&#x27; =&gt; &#x27;红包数量不足&#x27;];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $cutPoints = []; //切割点数组</span><br><span class="line">    $pointNums = $userNums - 1; //存放的</span><br><span class="line">    $userMoney = []; //每一个用户该分得的钱</span><br><span class="line">    //正式线段分割，完全随机 </span><br><span class="line">    // $j = 0;</span><br><span class="line">    // 当 用户数 和 总金额差距不大时，这种写法效率极差</span><br><span class="line">    while ($pointNums &gt; 0) &#123;</span><br><span class="line">        if ($isEveryHave == 1) &#123;</span><br><span class="line">            $randVal = mt_rand(1, $Moneys - 1); //每个人都有，mt_rand包含区间边界的，即包含最大值 和 最小值 ，1和2都会出现</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            $randVal = mt_rand(0, $Moneys); //所有用户，全区间随机，保证了公平，所有人概率一致 0~10。如果$Moneys设置-1，导致最后一位必定不为0</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (in_array($randVal, $cutPoints)) &#123;  //这边会产生随机碰撞，500个随机需要2500次左右才能覆盖。</span><br><span class="line">            // $j++;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        $cutPoints[] = $randVal;</span><br><span class="line">        $pointNums--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // echo &quot;无效循环次数：&quot; . $j . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    // echo &quot;最终切割点数组数量：&quot; . count($cutPoints) . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    // var_dump($cutPoints);</span><br><span class="line">    // return;</span><br><span class="line"></span><br><span class="line">    //根据cutPoint计算每个人所得 同时考虑：就一个人</span><br><span class="line">    $lastVal = 0;</span><br><span class="line">    if (count($cutPoints) &gt; 0) &#123;</span><br><span class="line">        sort($cutPoints);</span><br><span class="line">        foreach ($cutPoints as $RandPoint) &#123;</span><br><span class="line">            $userMoney[] = $RandPoint - $lastVal;</span><br><span class="line">            $lastVal = $RandPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $lastDiff = $Moneys - $lastVal;</span><br><span class="line">    $userMoney[] =  $lastDiff;</span><br><span class="line"></span><br><span class="line">    // echo &quot;总数：&quot; . count($userMoney) . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    // echo &quot;总值：&quot; . array_sum($userMoney) . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    return [&#x27;code&#x27; =&gt; 0, &#x27;msg&#x27; =&gt; &quot;success&quot;, &#x27;redbag&#x27; =&gt; $userMoney];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>但是有个致命缺陷，随机值碰撞，分割数量越接近总金额，碰撞概率越大 ，所以最好用户数量与总金额差的越大越好</strong>，利用array_rand一次拿出多个随机值时，随机且去重,且随机区间包括首尾。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">function lineSegmentOptimize($Moneys, $userNums, $isEveryHave = 1) //$baseMoney = 1默认为1</span><br><span class="line">&#123;</span><br><span class="line">    if ($Moneys &lt;= 0 || $userNums &lt;= 0) &#123;</span><br><span class="line">        return [&#x27;code&#x27; =&gt; -3, &#x27;msg&#x27; =&gt; &#x27;红包金额或拆红包总人数不合法&#x27;];</span><br><span class="line">    &#125;</span><br><span class="line">    if ($isEveryHave &amp;&amp; $userNums &gt; $Moneys) &#123;</span><br><span class="line">        return [&#x27;code&#x27; =&gt; -4, &#x27;msg&#x27; =&gt; &#x27;红包数量不足&#x27;];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $cutPoints = [];</span><br><span class="line">    $userMoney = [];</span><br><span class="line"></span><br><span class="line">    if ($isEveryHave) &#123;</span><br><span class="line">        $MoneysArr = array_fill(1, $Moneys - 1, 0); //转成数组时,去掉头尾得-1，如果10，则下标是1-9</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $MoneysArr = array_fill(0, $Moneys + 1, 0); //转成数组,为了保留头尾得+1，如果10，则下标是0-10，array_rand区间包含首尾</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if ($userNums == 1) &#123;</span><br><span class="line">        $userMoney[] = $Moneys;</span><br><span class="line">        return [&#x27;code&#x27; =&gt; 0, &#x27;msg&#x27; =&gt; &quot;success&quot;, &#x27;redbag&#x27; =&gt; $userMoney];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $cutPoints = array_rand($MoneysArr, $userNums - 1); //多随机、且去重、且区间包含首尾，array_rand第二个值不可为0</span><br><span class="line">    sort($cutPoints);</span><br><span class="line">    $lastVal = 0;</span><br><span class="line">    foreach ($cutPoints as  $randPoint) &#123;</span><br><span class="line">        $diff = $randPoint - $lastVal;</span><br><span class="line">        $userMoney[] =  $diff;</span><br><span class="line">        $lastVal = $randPoint;</span><br><span class="line">    &#125;</span><br><span class="line">    $lastDiff = $Moneys - $lastVal;</span><br><span class="line">    $userMoney[] =  $lastDiff;</span><br><span class="line"></span><br><span class="line">    // echo &quot;总数：&quot; . count($userMoney) . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    // var_dump($userMoney);</span><br><span class="line">    // echo &quot;总值：&quot; . array_sum($userMoney) . &quot;&lt;br&gt;&quot;;</span><br><span class="line">    return [&#x27;code&#x27; =&gt; 0, &#x27;msg&#x27; =&gt; &quot;success&quot;, &#x27;redbag&#x27; =&gt; $userMoney];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><p><img data-src="/transblog/images/408022611264994.png"></p>
+<h1 id="计算机到底是真随机还是假随机？"><a href="#计算机到底是真随机还是假随机？" class="headerlink" title="计算机到底是真随机还是假随机？"></a>计算机到底是真随机还是假随机？</h1><p><a target="_blank" rel="noopener" href="https://www.random.org/">随机数网站</a></p>
+<h2 id="真随机数"><a href="#真随机数" class="headerlink" title="真随机数"></a>真随机数</h2><p>真正的随机数是使用物理现象产生的：比如掷钱币、骰子、转轮、使用电子元件的噪音、核裂变等等，这样的随机数发生器叫做物理性随机数发生器，它们的缺点是技术要求比较高。</p>
+<p><img data-src="/transblog/images/142184411246235.png" alt="真随机数图像"></p>
+<h2 id="伪随机数"><a href="#伪随机数" class="headerlink" title="伪随机数"></a>伪随机数</h2><p>真正意义上的随机数（或者随机事件）在某次产生过程中是按照实验过程中表现的分布概率随机产生的，其结果是不可预测的，是不可见的。而计算机中的随机函数是按照一定算法模拟产生的，其结果是确定的，是可见的。我们可以这样认为这个可预见的结果其出现的概率是100%。所以用计算机随机函数所产生的“随机数”并不随机，是伪随机数。</p>
+<p><strong>伪随机数其实是有规律的。只不过这个规律周期比较长，但还是可以预测的</strong>。主要原因就是伪随机数是计算机使用算法模拟出来的，这个过程并不涉及到物理过程，所以自然不可能具有真随机数的特性。</p>
+<p><img data-src="/transblog/images/426334411268675.png" alt="伪随机数图像"></p>
+<h2 id="使用程序产生随机数"><a href="#使用程序产生随机数" class="headerlink" title="使用程序产生随机数"></a>使用程序产生随机数</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> random = <span class="built_in">rand</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,random);</span><br><span class="line">    random = <span class="built_in">rand</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,random);</span><br><span class="line">    random = <span class="built_in">rand</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,random);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行后貌似是一串随机数。可是，当我们多次执行时，发现它的数值却还是和之前一样，所以需要设置种子。</p>
+<h3 id="使用time作为种子"><a href="#使用time作为种子" class="headerlink" title="使用time作为种子"></a>使用time作为种子</h3><p>最理想的就是时间了。时间每分每秒都在变动，正好符合我们的要求。<br><strong>srand函数必须放在循环或者循环调用的外面，否则还是会得出重复的数字。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"> </span><br><span class="line">int main ()</span><br><span class="line">&#123;</span><br><span class="line">	srand ((unsigned)time(NULL));</span><br><span class="line">	int random = rand();</span><br><span class="line">	printf(&quot;%d\n&quot;,random);</span><br><span class="line">	random = rand();</span><br><span class="line">	printf(&quot;%d\n&quot;,random);</span><br><span class="line">	random = rand();</span><br><span class="line">	printf(&quot;%d\n&quot;,random);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我想让产生的随机数在1-100范围内，用int random &#x3D; rand（）%100，这样行吗？答案是不行！！这种只适用范围较小的随机数</p>
+<p>结果是在范围内的。但是你如果短时间内连续执行，会发现它是有规律可循的，会随着时间的推移慢慢上涨，到100后再回到0，再重新上涨，</p>
+<h3 id="使用n-rand-RAND-MAX-1-0-作为种子"><a href="#使用n-rand-RAND-MAX-1-0-作为种子" class="headerlink" title="使用n*rand()&#x2F;(RAND_MAX+1.0)作为种子"></a>使用n*rand()&#x2F;(RAND_MAX+1.0)作为种子</h3><p>一种通用的做法是</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（<span class="type">int</span>）(n*<span class="built_in">rand</span>()/(RAND_MAX<span class="number">+1.0</span>))</span><br></pre></td></tr></table></figure>
+<p>这样产生随机数的周期会大大缩短</p>
+<h3 id="使用chrono作为种子"><a href="#使用chrono作为种子" class="headerlink" title="使用chrono作为种子"></a>使用chrono作为种子</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::chrono::system_clock::<span class="built_in">now</span>().<span class="built_in">time_since_epoch</span>().<span class="built_in">count</span>()</span><br><span class="line">std::chrono::steady_clock::<span class="built_in">now</span>().<span class="built_in">time_since_epoch</span>().<span class="built_in">count</span>() </span><br></pre></td></tr></table></figure>
+
+<p>这两个作为种子是更好的替代，它们都会返回精度很高的时间（单位为 long long），精度可以达到纳秒，即使连续重复调用多次也会得到不一样的返回值，它们具体的含义和差别可以在网上找到，对于算法竞赛来说用哪个都无所谓，使用时需要头文件&lt;chrono&gt;</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span>  </span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// obtain a seed from the system clock:  </span></span><br><span class="line">    <span class="type">unsigned</span> seed = std::chrono::system_clock::<span class="built_in">now</span>().<span class="built_in">time_since_epoch</span>().<span class="built_in">count</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="function">std::mt19937 <span class="title">generator</span><span class="params">(seed)</span></span>;  <span class="comment">// mt19937 is a standard mersenne_twister_engine  </span></span><br><span class="line">    <span class="keyword">auto</span> number = <span class="built_in">generator</span>();<span class="comment">//生成一个随机数</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Random value: &quot;</span> &lt;&lt; number &lt;&lt; std::endl;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="random-device-Linux下真随机"><a href="#random-device-Linux下真随机" class="headerlink" title="random_device(Linux下真随机)"></a>random_device(Linux下真随机)</h3><p>std::random_device 是一种随机数生成器类型，如果在 Linux 下调用会通过系统提供的一个系统噪音收集器来获取真随机数，在 Windows 下就会利用很多数据来计算熵，可以近似认为是真随机的<br>std::random_device 在头文件 &lt;random&gt; 中，调用时其会返回一个 unsigned int，值域就是 unsigned int 的值域范围<br><strong>由于是真随机数，效率问题是很明显的（在 Linux 下如果系统没有足够的噪声会造成阻塞，等待系统收集到足够的噪声后才会继续运行），我们通常只用其生成一个随机数作为种子</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	random_device rand;</span><br><span class="line">   	cout &lt;&lt; <span class="built_in">rand</span>() &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="mt19937"><a href="#mt19937" class="headerlink" title="mt19937"></a>mt19937</h3><p>这个奇怪的名字来源于这个生成随机数的算法 Mersenne twister（梅森旋转算法），至于其中的19937则是代表它生成的随机数的周期可以到达2^19937-1的惊人数量级，相比起 rand() 确实可以避免很多问题，而且 mt19937 几乎是最快的伪随机数生成器，效率非常高。有趣的是与很多人的直觉不同，这个算法其实是由两位日本人发明的，其中使用到了梅森质数，所以这个算法才有了这个名字</p>
+<ul>
+<li>std::mt19937 是一个随机数生成器类型，在头文件 &lt;random&gt; 中，调用时其会返回一个 unsigned int，值域是 unsigned int 的值域范围</li>
+<li>如果需要更大的值域范围可以使用 std::mt19937_64，唯一的区别就是返回值变成了一个 unsigned long long，值域也就是 unsigned long long 的值域</li>
+</ul>
+<p>定义时注意需要传入一个数作为种子（这里以 std::random_device 为例）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * std::random_device rd;</span></span><br><span class="line"><span class="comment"> * std::mt19937 Rnd(rd());</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">    <span class="function">std::mt19937 <span class="title">Rnd</span><span class="params">( std::random_device &#123;&#125; () )</span></span>; <span class="comment">/* 这样写等价于上面注释掉的写法，种子为 random_device */</span></span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">Rnd</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="default-random-engine"><a href="#default-random-engine" class="headerlink" title="default_random_engine"></a>default_random_engine</h3><p>一个随机化的前置引擎，这个需要提供时间种子，给后面要用到的函数生成一个随机节点（并没有什么卵用，就是让后面的函数随机化更强）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;random&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="function">default_random_engine <span class="title">rand</span><span class="params">(time(<span class="literal">NULL</span>))</span></span>;</span><br><span class="line">   	cout &lt;&lt; <span class="built_in">rand</span>() &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="uniform-int-distribution"><a href="#uniform-int-distribution" class="headerlink" title="uniform_int_distribution"></a>uniform_int_distribution</h3><p>该函数的作用是生成一个[a,b]范围内的整数，定义的时候传进去相应的参数（数据范围即可）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">uniform_int_distribution&lt;<span class="type">int</span>&gt; <span class="title">rand1</span><span class="params">(<span class="number">-100</span>, <span class="number">100</span>)</span></span>;</span><br><span class="line">cout &lt;&lt; <span class="built_in">rand1</span>(rand) &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="uniform-real-distribution"><a href="#uniform-real-distribution" class="headerlink" title="uniform_real_distribution"></a>uniform_real_distribution</h3><p>实数域的随机生成器</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">uniform_real_distribution&lt;<span class="type">double</span>&gt; <span class="title">rand2</span><span class="params">(<span class="number">0.0</span>, <span class="number">1.0</span>)</span></span>;</span><br><span class="line">cout &lt;&lt; <span class="built_in">rand2</span>(rand) &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+<h3 id="normal-distribution"><a href="#normal-distribution" class="headerlink" title="normal_distribution"></a>normal_distribution</h3><p>正态分布，使用方法，第一个参数是μ，第二个是σ</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">normal_distribution&lt;<span class="type">double</span>&gt; <span class="title">N</span><span class="params">(<span class="number">10.0</span>, <span class="number">5.0</span>)</span></span>;</span><br><span class="line"><span class="comment">//为了方便直观的看出数据分布，把每次生成的数据出现次数+1，测试的时候输出了数据分布图像</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">register</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++)&#123;</span><br><span class="line">	      <span class="type">double</span> num = <span class="built_in">nor</span>(rand);</span><br><span class="line">	      <span class="keyword">if</span> ((num &gt;= <span class="number">0.0</span>) &amp;&amp; (num &lt; <span class="number">20.0</span>)) ++p[<span class="built_in">int</span>(num)];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; ++i) &#123;</span><br><span class="line">    	cout &lt;&lt; i &lt;&lt; <span class="string">&quot;-&quot;</span> &lt;&lt; (i + <span class="number">1</span>) &lt;&lt; <span class="string">&quot;: &quot;</span>;</span><br><span class="line">    	cout &lt;&lt; <span class="built_in">string</span>(p[i] * <span class="number">100</span> / <span class="number">10000</span>, <span class="string">&#x27;*&#x27;</span>) &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><table>
+<thead>
+<tr>
+<th align="center">工具名称</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">std::random_device</td>
+<td align="center">一个真正的随机数生成器，通常用于为其他随机数引擎提供种子。</td>
+</tr>
+<tr>
+<td align="center">std::mt19937</td>
+<td align="center">一个基于Mersenne Twister算法的伪随机数生成器。</td>
+</tr>
+<tr>
+<td align="center">std::default_random_engine</td>
+<td align="center">默认引擎，快速生成随机数</td>
+</tr>
+<tr>
+<td align="center">std::uniform_int_distribution</td>
+<td align="center">用于生成均匀分布的整数随机数。</td>
+</tr>
+<tr>
+<td align="center">std::uniform_real_distribution</td>
+<td align="center">用于生成均匀分布的实数随机数。</td>
+</tr>
+<tr>
+<td align="center">std::normal_distribution</td>
+<td align="center">用于生成正态分布的浮点随机数。</td>
+</tr>
+</tbody></table>
+<link rel="stylesheet" href="/transblog/css/spoiler.css" type="text/css"><script src="/transblog/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>给耶耶买杯咖啡喝</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/weixin_reward.jpg" alt="trans-xu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/zhifubao_reward.jpg" alt="trans-xu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="prev" title="系统设计">
+      <i class="fa fa-chevron-left"></i> 系统设计
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="next" title="计算机网络">
+      计算机网络 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%A2%E5%88%B0%E7%BA%A2%E5%8C%850-01%E5%85%83%EF%BC%8C%E6%80%8E%E4%B9%88%E6%90%9E%E7%9A%84%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">抢到红包0.01元，怎么搞的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E9%9A%8F%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">普通随机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%80%8D%E5%9D%87%E5%80%BC%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">二倍均值算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%AE%B5%E5%88%86%E5%89%B2%E7%AE%97%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">线段分割算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">1.4.</span> <span class="nav-text">总结对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%88%B0%E5%BA%95%E6%98%AF%E7%9C%9F%E9%9A%8F%E6%9C%BA%E8%BF%98%E6%98%AF%E5%81%87%E9%9A%8F%E6%9C%BA%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">计算机到底是真随机还是假随机？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%9F%E9%9A%8F%E6%9C%BA%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">真随机数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">伪随机数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%BA%A7%E7%94%9F%E9%9A%8F%E6%9C%BA%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">使用程序产生随机数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8time%E4%BD%9C%E4%B8%BA%E7%A7%8D%E5%AD%90"><span class="nav-number">2.3.1.</span> <span class="nav-text">使用time作为种子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8n-rand-RAND-MAX-1-0-%E4%BD%9C%E4%B8%BA%E7%A7%8D%E5%AD%90"><span class="nav-number">2.3.2.</span> <span class="nav-text">使用n*rand()&#x2F;(RAND_MAX+1.0)作为种子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8chrono%E4%BD%9C%E4%B8%BA%E7%A7%8D%E5%AD%90"><span class="nav-number">2.3.3.</span> <span class="nav-text">使用chrono作为种子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#random-device-Linux%E4%B8%8B%E7%9C%9F%E9%9A%8F%E6%9C%BA"><span class="nav-number">2.3.4.</span> <span class="nav-text">random_device(Linux下真随机)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mt19937"><span class="nav-number">2.3.5.</span> <span class="nav-text">mt19937</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#default-random-engine"><span class="nav-number">2.3.6.</span> <span class="nav-text">default_random_engine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uniform-int-distribution"><span class="nav-number">2.3.7.</span> <span class="nav-text">uniform_int_distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uniform-real-distribution"><span class="nav-number">2.3.8.</span> <span class="nav-text">uniform_real_distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#normal-distribution"><span class="nav-number">2.3.9.</span> <span class="nav-text">normal_distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.10.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">trans-xu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/transblog/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/transblog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">trans-xu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">401k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:04</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/transblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/transblog/js/utils.js"></script>
+
+<script src="/transblog/js/motion.js"></script>
+
+
+<script src="/transblog/js/schemes/muse.js"></script>
+
+
+<script src="/transblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/transblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'yAoX6gn7GI1DLsEMuYu9H1Tn-gzGzoHsz',
+      appKey     : 'IYT4u4yNOKXWtyvKYfcTgfKb',
+      placeholder: "留下你想说的",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

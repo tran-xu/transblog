@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/transblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/transblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/transblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/transblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/transblog/css/main.css">
+
+
+<link rel="stylesheet" href="/transblog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trans-xu.github.io","root":"/transblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Grafana什么是Grafana？Grafana使用Prometheus数据源官方文档Grafana是一款功能强大的开源监控数据分析和可视化套件。它最初主要用于显示和监控Graphite指标数据，但随着时间的推移，其功能和应用范围得到了极大的扩展。Grafana的核心功能在于对基础设施和应用数据分析的时间序列数据进行可视化分析，使用户能够更直观地理解和分析数据。可以理解为一种前端展示  特点：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统监控-Prometheus">
+<meta property="og:url" content="https://trans-xu.github.io/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/index.html">
+<meta property="og:site_name" content="一只萨摩耶的博客">
+<meta property="og:description" content="Grafana什么是Grafana？Grafana使用Prometheus数据源官方文档Grafana是一款功能强大的开源监控数据分析和可视化套件。它最初主要用于显示和监控Graphite指标数据，但随着时间的推移，其功能和应用范围得到了极大的扩展。Grafana的核心功能在于对基础设施和应用数据分析的时间序列数据进行可视化分析，使用户能够更直观地理解和分析数据。可以理解为一种前端展示  特点：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/238945509252002.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/498635111236447.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/179791315256613.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/375883109258991.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/430785410252008.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/558635410269888.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/110965510267492.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/440064009267024.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/222244109259693.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/249594409256248.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/435884609258196.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/375914210240571.png">
+<meta property="og:image" content="https://trans-xu.github.io/transblog/images/267775010258997.png">
+<meta property="article:published_time" content="2025-08-27T03:50:08.903Z">
+<meta property="article:modified_time" content="2025-08-27T03:37:51.447Z">
+<meta property="article:author" content="trans-xu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trans-xu.github.io/transblog/images/238945509252002.png">
+
+<link rel="canonical" href="https://trans-xu.github.io/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>系统监控-Prometheus | 一只萨摩耶的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/transblog/atom.xml" title="一只萨摩耶的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/transblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只萨摩耶的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">程序员技术栈</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/transblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/transblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/transblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trans-xu.github.io/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/transblog/images/avatar.gif">
+      <meta itemprop="name" content="trans-xu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只萨摩耶的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          系统监控-Prometheus
+        </h1>
+
+        <div class="post-meta">
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-27 11:37:51" itemprop="dateModified" datetime="2025-08-27T11:37:51+08:00">2025-08-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/transblog/categories/%E5%A5%87%E9%97%BB%E8%BD%B6%E4%BA%8B/" itemprop="url" rel="index"><span itemprop="name">奇闻轶事</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/transblog/2025/08/27/%E5%8F%AF%E8%A7%86%E5%8C%96%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Grafana"><a href="#Grafana" class="headerlink" title="Grafana"></a>Grafana</h1><h2 id="什么是Grafana？"><a href="#什么是Grafana？" class="headerlink" title="什么是Grafana？"></a>什么是Grafana？</h2><p><a target="_blank" rel="noopener" href="https://grafana.com/docs/grafana/latest/datasources/prometheus/">Grafana使用Prometheus数据源官方文档</a><br>Grafana是一款功能强大的开源监控数据分析和可视化套件。它最初主要用于显示和监控Graphite指标数据，但随着时间的推移，其功能和应用范围得到了极大的扩展。Grafana的核心功能在于对基础设施和应用数据分析的时间序列数据进行可视化分析，使用户能够更直观地理解和分析数据。<strong>可以理解为一种前端展示</strong></p>
+<p><img data-src="/transblog/images/238945509252002.png"></p>
+<p>特点：</p>
+<ol>
+<li>展示方式：快速灵活的客户端图表，面板插件有许多不同方式的可视化指标和日志，官方库中具有丰富的仪表盘插件，比如热图、折线图、图表等多种展示方式；</li>
+<li>数据源：Graphite，InfluxDB，OpenTSDB，Prometheus，Elasticsearch，CloudWatch和KairosDB等；</li>
+<li>通知提醒：以可视方式定义最重要指标的警报规则，Grafana将不断计算并发送通知，在数据达到阈值时通过Slack、PagerDuty等获得通知；</li>
+<li>混合展示：在同一图表中混合使用不同的数据源，可以基于每个查询指定数据源，甚至自定义数据源；</li>
+<li>注释：使用来自不同数据源的丰富事件注释图表，将鼠标悬停在事件上会显示完整的事件元数据和标记；</li>
+<li>过滤器：Ad-hoc过滤器允许动态创建新的键&#x2F;值过滤器，这些过滤器会自动应用于使用该数据源的所有查询。</li>
+</ol>
+<h2 id="Grafana视图模板"><a href="#Grafana视图模板" class="headerlink" title="Grafana视图模板"></a>Grafana视图模板</h2><p><img data-src="/transblog/images/498635111236447.png"></p>
+<h1 id="Prometheus"><a href="#Prometheus" class="headerlink" title="Prometheus"></a>Prometheus</h1><h2 id="Prometheus实战"><a href="#Prometheus实战" class="headerlink" title="Prometheus实战"></a>Prometheus实战</h2><p><a target="_blank" rel="noopener" href="https://prometheus.wang/">Prometheus学习与实战</a></p>
+<ul>
+<li>Retrieval：负责在活跃的target主机上抓取监控指标数据</li>
+<li>Storage：存储主要是把采集到的数据存储到磁盘中</li>
+<li>PromQL：是Prometheus提供的查询语言模块。</li>
+<li>Prometheus Server：用于收集和存储时间序列数据</li>
+<li>pushgateway：各个目标主机可上报数据到pushgateway，然后prometheus server统一从pushgateway拉取数据。</li>
+</ul>
+<p><img data-src="/transblog/images/179791315256613.png"></p>
+<p><strong>！！！Prometheus 的指标值，并非 100% 准确！！！</strong></p>
+<h2 id="可观测三角"><a href="#可观测三角" class="headerlink" title="可观测三角"></a>可观测三角</h2><p>在可观测的世界里，metrics（指标）、log（日志）、trace（调用链） 三足鼎立。有点<strong>类似分布式系统的CAP理论</strong></p>
+<p><img data-src="/transblog/images/375883109258991.png"></p>
+<ul>
+<li>metrics（指标）好似运动手表：24小时采样心率，并在心率超限时告警；</li>
+<li>log（日志）好似详细体检：输出厚厚一沓严密、精确的权威报告；</li>
+<li>trace（调用链）好似血管灌注：哪段血管堵了，只需看灌注造影，一目了然。</li>
+</ul>
+<p>Prometheus 所在的 metrics（指标） 领域，其目标是诊断整体健康状况，其手段通常是对原始数据先采样、再聚合，利用有限的信息，分析变化趋势；而并非像 log（日志）那样，翔实精确、事无巨细地，记录每一桩事件、每一条原始数据。</p>
+<h2 id="Prometheus监控数据要点"><a href="#Prometheus监控数据要点" class="headerlink" title="Prometheus监控数据要点"></a>Prometheus监控数据要点</h2><h3 id="请求类数据"><a href="#请求类数据" class="headerlink" title="请求类数据"></a>请求类数据</h3><ol>
+<li>请求量 - 按接口统计</li>
+<li>错误数 - 按接口统计</li>
+<li>接口耗时 - P50（可选）、P90、P95、P99、MAX</li>
+<li>访问第三方资源数据 - 请求量、错误数、接口耗时</li>
+</ol>
+<h3 id="资源类数据"><a href="#资源类数据" class="headerlink" title="资源类数据"></a>资源类数据</h3><ol>
+<li>线程使用数</li>
+<li>队列长度——run: size()——PushPackage：&gt;10</li>
+<li>协程使用数量</li>
+<li>进程句柄数</li>
+<li>机器句柄数</li>
+<li>机器CPU</li>
+<li>机器内存使用数量</li>
+<li>….</li>
+</ol>
+<h3 id="组件类数据"><a href="#组件类数据" class="headerlink" title="组件类数据"></a>组件类数据</h3><ol>
+<li>redis访问数据 - 访问量、耗时（Pxx）</li>
+<li>Mysql访问数据</li>
+<li>MQ访问数据</li>
+<li>…</li>
+</ol>
+<h3 id="自定义数据"><a href="#自定义数据" class="headerlink" title="自定义数据"></a>自定义数据</h3><ol>
+<li>特殊业务流量上报</li>
+<li>CUPS</li>
+<li>特殊（重点关注）错误码</li>
+<li>…</li>
+</ol>
+<h2 id="Prometheus的数据形式–时间序列"><a href="#Prometheus的数据形式–时间序列" class="headerlink" title="Prometheus的数据形式–时间序列"></a>Prometheus的数据形式–时间序列</h2><p>在Prometheus中，时间序列数据以时间戳为索引，以连续的数据样本构成的系列称为时间序列。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">│   . . . . . . . . . . . . . . . . .   node_cpu&#123;cpu=<span class="string">&quot;cpu0&quot;</span>,mode=<span class="string">&quot;idle&quot;</span>&#125;    时间序列1</span><br><span class="line">│   . . . . . . . . . . . . . . . . .   node_cpu&#123;cpu=<span class="string">&quot;cpu0&quot;</span>,mode=<span class="string">&quot;system&quot;</span>&#125;  时间序列2</span><br><span class="line">│   . . . . . . . . . . . . . . . ..    node_load1&#123;&#125;                        时间序列3</span><br><span class="line">v</span><br><span class="line">  ----------------------------------- 时间 -----------------------------------------&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;-------------------- 指标 ------------------&gt;&lt;--- 时间戳 ---&gt;&lt;- 样本值 -&gt;</span><br><span class="line">&lt;------------------- metric -----------------&gt;&lt;- timestamp -&gt;&lt;- value -&gt;</span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;200&quot;</span>, method=<span class="string">&quot;GET&quot;</span>&#125;@1434417560938 =&gt; 94355</span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;200&quot;</span>, method=<span class="string">&quot;GET&quot;</span>&#125;@1434417561287 =&gt; 94334</span><br><span class="line"></span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;404&quot;</span>, method=<span class="string">&quot;GET&quot;</span>&#125;@1434417560938 =&gt; 38473</span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;404&quot;</span>, method=<span class="string">&quot;GET&quot;</span>&#125;@1434417561287 =&gt; 38544</span><br><span class="line"></span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;200&quot;</span>, method=<span class="string">&quot;POST&quot;</span>&#125;@1434417560938 =&gt; 4748</span><br><span class="line">http_request_total&#123;status=<span class="string">&quot;200&quot;</span>, method=<span class="string">&quot;POST&quot;</span>&#125;@1434417561287 =&gt; 4785</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在形式上，所有的指标(Metric)都通过如下格式标示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;metric name&gt;&#123;&lt;label name&gt;=&lt;label value&gt;, ...&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Prometheus做出的妥协"><a href="#Prometheus做出的妥协" class="headerlink" title="Prometheus做出的妥协"></a>Prometheus做出的妥协</h2><p><strong>宁愿“脑补”，也不愿低效。</strong></p>
+<p>除了 metrics 领域自身的特性，Prometheus 毕竟处在一个条件有限的真实世界，它还要随时面临以下困难：</p>
+<ul>
+<li>自身硬件有限：不敢拼命计算，不敢无限存储；</li>
+<li>采样统计的局限性：稀稀拉拉、分布未知的样本；</li>
+<li>分布式的局限性：丢数据的网络、不靠谱的对端；<br>……</li>
+</ul>
+<p>Prometheus 需要在上述限制下，交出 not perfect、但是 good enough 的指标。于是就有了下述设计：</p>
+<ul>
+<li><strong>单次采样不重要，多次采样组成的时间序列才重要。所以，单次采样受阻，是可以无需重试、直接丢弃的。</strong></li>
+<li><strong>单点数值不重要，多点数值汇聚的变化趋势才重要。所以，单点数值是可以“无中生有”、”脑补”估算的。</strong></li>
+</ul>
+<h2 id="P50、P90、P95"><a href="#P50、P90、P95" class="headerlink" title="P50、P90、P95"></a>P50、P90、P95</h2><p>P90 是一个统计术语，代表着第90百分位数（90th percentile）。在性能监控和服务质量评估中，P90 常用来衡量响应时间或延迟的指标。具体来说，P90 的含义是在所有测量值中，有 90% 的数据点小于或等于这个值，而只有 10% 的数据点大于这个值。</p>
+<p>例如，如果一个网络服务的响应时间的 P90 是 200 毫秒，这意味着在所有的请求中，90% 的请求的响应时间都不会超过 200 毫秒，只有 10% 的请求的响应时间会超过这个数值。这是一个衡量系统在高负载下性能的重要指标，因为它可以告诉你绝大多数用户的体验如何。</p>
+<h2 id="Prometheus的range"><a href="#Prometheus的range" class="headerlink" title="Prometheus的range"></a>Prometheus的range</h2><p>选择 rate 的 range 时，到底在选择什么？</p>
+<ul>
+<li>rate[30s] 计算过去 30 秒内的平均速率。</li>
+<li>rate[1m] 计算过去 1 分钟内的平均速率。</li>
+<li>rate[5m] 计算过去 5 分钟内的平均速率。</li>
+</ul>
+<p><img data-src="/transblog/images/430785410252008.png" alt="rate[30s]"></p>
+<p><img data-src="/transblog/images/558635410269888.png" alt="rate[1m]"></p>
+<p><img data-src="/transblog/images/110965510267492.png" alt="rate[5m]"></p>
+<p>为什么上面三幅图选择范围不同图形状况会大变？<br>假设我们系统的错误数长期为0，而在某时刻暴增100，那么上述三种时间范围窗口，意味着将这 100 均分到 30秒，还是 60 秒，还是300秒；那么答案也显而易见：分母越大，按秒平均后的增量则越平滑。<br><strong>总结：</strong></p>
+<ul>
+<li><strong>窗口小则更加敏感，能够捕捉到更短时间内的变化。这意味着如果有突发事件或者短期波动，它会在曲线上表现得更明显。</strong></li>
+<li><strong>窗口大会更加平滑，因为它平均了更长时间内的数据。这样可以减少短期波动的影响，但也可能掩盖掉短时间内的突发事件。</strong></li>
+</ul>
+<h2 id="案例分解"><a href="#案例分解" class="headerlink" title="案例分解"></a>案例分解</h2><h3 id="rate-increase"><a href="#rate-increase" class="headerlink" title="rate&#x2F;increase"></a>rate&#x2F;increase</h3><p>在使用 rate 或者 increase 观测 counter 类型的指标增量时，经常碰到以下问题：</p>
+<ul>
+<li>每分钟新增的请求数，竟然是个小数？</li>
+<li>不仅是个小数，还比真实增量更大？</li>
+</ul>
+<p>Prometheus在没有踩中样本值做法是：naive 地假设所有样本点在该时间范围内是均匀分布的，然后按照这个均匀分布的线性规律，**<mark>脑补</mark>估算出边界上的采样点**。那么，补出来一些不准确的值，也就不足为奇了。</p>
+<p>其中脑补这一操作，使用的就是<strong>线性外推算法</strong>：rate&#x2F;increase[时间范围] 在计算该时间范围内的增量时，第一步要拿到该时间范围边界上（开始时刻和结束时刻）的样本点，相减得到差值。<strong>但是：在当前时间范围的边界，并不一定那么凑巧地有样本点存在。</strong></p>
+<p><strong>分析：</strong></p>
+<p><img data-src="/transblog/images/435884609258196.png"></p>
+<p>计算一分钟之内，errors_total 值的增量，也即 increase(errors_total[1m])。要计算 [1m] 的时间范围&#x2F;取样窗口内的 increase，在最理想的情况下，Prometheus 根本不想关心这个窗口内的其他数据，而只需从窗口左边界取第一个点，右边界取最后一个点，相减即可：</p>
+<p><img data-src="/transblog/images/440064009267024.png"></p>
+<p><strong>但是，能保证每次都能踩中自己上报的值吗？答案很显然不能</strong></p>
+<p><img data-src="/transblog/images/222244109259693.png"></p>
+<p>取窗口覆盖范围内的第一个点和最后一个点，计算斜率，并按照该斜率将直线延伸至窗口边界，无中生有地“脑补”出虚拟的两个“样本点”，即可相减计算 increase 了：</p>
+<p><img data-src="/transblog/images/249594409256248.png"></p>
+<p>如上图：用绿圈圈所代表的“虚拟样本”相减，得到的 increase 1.3 不仅是个小数，还比实际值偏大，也就不足为奇了。</p>
+<h3 id="histogram"><a href="#histogram" class="headerlink" title="histogram"></a>histogram</h3><p>histogram是柱状图，有三种作用：</p>
+<ol>
+<li>对每个采样点进行统计（并不是一段时间的统计），打到各个桶(bucket)中</li>
+<li>对每个采样点值累计和(sum)</li>
+<li>对采样点的次数累计和(count)</li>
+</ol>
+<h4 id="为什么histogram得到的值会不准？"><a href="#为什么histogram得到的值会不准？" class="headerlink" title="为什么histogram得到的值会不准？"></a>为什么histogram得到的值会不准？</h4><p>先从茫茫多的原始数据中采样出样本点，放到各个 bucket（桶）里；然后 naive 地假设所有样本是均匀分布的，据此做线性插值，“无中生有”出所需的“样本点”。</p>
+<p><strong>分析：</strong></p>
+<p><img data-src="/transblog/images/435884609258196.png"></p>
+<p>模拟拟每秒产生一个新的 HTTP 请求耗时的观察值，然后计算其 P99。为了埋点生成 http_response_time_seconds 这一 histogram 指标，每秒钟暴露一个观察值：假设有 50% 的概率，样本值大小在 [0.1, 0.5) 范围内。有 50% 的概率，样本值大小在 [0.5, 1.0) 范围内。<br><strong>这里故意对histogram划分成四个不合理的桶: &lt;&#x3D; 0.1、&lt;&#x3D;0.5、&lt;&#x3D;100、&lt;&#x3D;正无穷</strong>。它们在各个桶内的分布，大致示意如下：</p>
+<p><img data-src="/transblog/images/375914210240571.png"></p>
+<p>如何计算P99：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">histogram_quantile(0.99, rate(http_response_time_seconds_bucket[5m]))</span><br></pre></td></tr></table></figure>
+<p>99% 分位 * 总数 100 &#x3D; 第 99 号。第 99 号样本在 0.5~100 bucket 段的第 51 号 ~ 第 100 号样本当中，排行 49。<br><strong>Prometheus 只知道：</strong></p>
+<ul>
+<li>有 50 个样本落在 0.5~100 bucket 段。</li>
+<li>排行第一和排行最末的的样本值之差最大可达 100-0.5（bucket 段的左右边界之差）。</li>
+<li>目标样本在这个 bucket 段里排行 49。</li>
+</ul>
+<p><strong>但是它并不知道：</strong></p>
+<ul>
+<li>这个 bucket 段左右边界的差值 100 - 0.5 是否完全分布到了这 50 个样本头上。</li>
+<li>bucket 段内的差值是如何分布到这 50 个样本头上的。</li>
+</ul>
+<p>保险起见，Prometheus<strong>又自动脑补</strong>bucket 段内的全额差值，被均匀、线性地，分到了所有样本头上。因为这样就<strong>又可以用线性插值</strong>的方式，来计算分位值了：</p>
+<p>所求分位值 &#x3D; bucket 段左边界值 + (bucket 段右边界值 - bucket 段左边界值) * (目标样本在本 bucket 段的排行 &#x2F; 本 bucket 段的样本总数)即：P99 &#x3D; 0.5 + (100 - 0.5) * (49&#x2F;50) &#x3D; 98.01</p>
+<p><img data-src="/transblog/images/267775010258997.png"></p>
+<h3 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h3><p>用于记录某些东西的平均大小，可能是计算所需的时间或处理的文件大小，summary显示两个相关的信息：count（事件发生的次数）和 sum（所有事件的总大小）。</p>
+<p>例如：</p>
+<ul>
+<li>在客户端对于一段时间内（默认是10分钟）的每个采样点进行统计，并形成分位图。（如：正态分布一样，统计低于60分不及格的同学比例，统计低于80分的同学比例，统计低于95分的同学比例）</li>
+<li>统计班上所有同学的总成绩(sum)</li>
+<li>统计班上同学的考试总人数(count)</li>
+</ul>
+<p>如果返回次数为 3 和总和 15，也就意味着 3 次计算总共需要 15s 来处理，平均每次计算需要花费 5s。下一个样本的次数为 10，总和为 113，那么平均值为 11.3，因为两组指标都记录有时间戳，所以我们可以使用摘要来构建一个图表，显示平均值的变化率</p>
+<h4 id="怎么选择histogram和summary？"><a href="#怎么选择histogram和summary？" class="headerlink" title="怎么选择histogram和summary？"></a>怎么选择histogram和summary？</h4><p><strong>如果需要聚合，或对将要观察的值的范围和分布有所了解，请选择histogram。无论值的范围和分布是什么，如果都需要准确的分位数，请选择summary。</strong></p>
+<h2 id="PromQL"><a href="#PromQL" class="headerlink" title="PromQL"></a>PromQL</h2><link rel="stylesheet" href="/transblog/css/spoiler.css" type="text/css"><script src="/transblog/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>给耶耶买杯咖啡喝</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/weixin_reward.jpg" alt="trans-xu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/transblog/images/zhifubao_reward.jpg" alt="trans-xu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/ZooKeeper/" rel="prev" title="ZooKeeper">
+      <i class="fa fa-chevron-left"></i> ZooKeeper
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/transblog/2025/08/27/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="next" title="排序算法">
+      排序算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Grafana"><span class="nav-number">1.</span> <span class="nav-text">Grafana</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFGrafana%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Grafana？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grafana%E8%A7%86%E5%9B%BE%E6%A8%A1%E6%9D%BF"><span class="nav-number">1.2.</span> <span class="nav-text">Grafana视图模板</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prometheus"><span class="nav-number">2.</span> <span class="nav-text">Prometheus</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus%E5%AE%9E%E6%88%98"><span class="nav-number">2.1.</span> <span class="nav-text">Prometheus实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%82%E6%B5%8B%E4%B8%89%E8%A7%92"><span class="nav-number">2.2.</span> <span class="nav-text">可观测三角</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E8%A6%81%E7%82%B9"><span class="nav-number">2.3.</span> <span class="nav-text">Prometheus监控数据要点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E7%B1%BB%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.1.</span> <span class="nav-text">请求类数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%B1%BB%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.2.</span> <span class="nav-text">资源类数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E7%B1%BB%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.3.</span> <span class="nav-text">组件类数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.4.</span> <span class="nav-text">自定义数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BD%A2%E5%BC%8F%E2%80%93%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97"><span class="nav-number">2.4.</span> <span class="nav-text">Prometheus的数据形式–时间序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus%E5%81%9A%E5%87%BA%E7%9A%84%E5%A6%A5%E5%8D%8F"><span class="nav-number">2.5.</span> <span class="nav-text">Prometheus做出的妥协</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P50%E3%80%81P90%E3%80%81P95"><span class="nav-number">2.6.</span> <span class="nav-text">P50、P90、P95</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus%E7%9A%84range"><span class="nav-number">2.7.</span> <span class="nav-text">Prometheus的range</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E5%88%86%E8%A7%A3"><span class="nav-number">2.8.</span> <span class="nav-text">案例分解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rate-increase"><span class="nav-number">2.8.1.</span> <span class="nav-text">rate&#x2F;increase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#histogram"><span class="nav-number">2.8.2.</span> <span class="nav-text">histogram</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88histogram%E5%BE%97%E5%88%B0%E7%9A%84%E5%80%BC%E4%BC%9A%E4%B8%8D%E5%87%86%EF%BC%9F"><span class="nav-number">2.8.2.1.</span> <span class="nav-text">为什么histogram得到的值会不准？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#summary"><span class="nav-number">2.8.3.</span> <span class="nav-text">summary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9histogram%E5%92%8Csummary%EF%BC%9F"><span class="nav-number">2.8.3.1.</span> <span class="nav-text">怎么选择histogram和summary？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PromQL"><span class="nav-number">2.9.</span> <span class="nav-text">PromQL</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">trans-xu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/transblog/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/transblog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">trans-xu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">401k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:04</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/transblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.min.js"></script>
+  <script src="/transblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/transblog/js/utils.js"></script>
+
+<script src="/transblog/js/motion.js"></script>
+
+
+<script src="/transblog/js/schemes/muse.js"></script>
+
+
+<script src="/transblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/transblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'yAoX6gn7GI1DLsEMuYu9H1Tn-gzGzoHsz',
+      appKey     : 'IYT4u4yNOKXWtyvKYfcTgfKb',
+      placeholder: "留下你想说的",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
