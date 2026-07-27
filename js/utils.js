@@ -233,34 +233,149 @@ NexT.utils = {
 
   registerSidebarTOC: function() {
     const navItems = document.querySelectorAll('.post-toc li');
+    // 跳转（叶子单击/标题双击）触发时为 true，使 activateNavByIndex 只高亮不展开路径
+    var skipActivate = false;
+    // 给有子目录的项加 has-child 标记，用于 CSS 显示展开/收起箭头
+    navItems.forEach(element => {
+      if (element.querySelector(':scope > .nav-child')) element.classList.add('has-child');
+    });
     const sections = [...navItems].map(element => {
       var link = element.querySelector('a.nav-link');
       var target = document.getElementById(decodeURI(link.getAttribute('href')).replace('#', ''));
-      // TOC item animation navigate.
+      // 单击：toggle 折叠/展开（展开中→收起全部后代；收起中→展开一层直接子级）
+      // 双击：滚动跳转到该标题内容
+      var clickTimer = null;
       link.addEventListener('click', event => {
         event.preventDefault();
-        var offset = target.getBoundingClientRect().top + window.scrollY;
-        window.anime({
-          targets  : document.scrollingElement,
-          duration : 500,
-          easing   : 'linear',
-          scrollTop: offset + 10
-        });
+        // 无子标题的叶子项：单击直接跳转（无需 toggle，不展开上面）
+        if (!element.classList.contains('has-child')) {
+          var offset = target.getBoundingClientRect().top + window.scrollY;
+          skipActivate = true;
+          window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: offset + 10
+          });
+          setTimeout(() => { skipActivate = false; }, 800);
+          return;
+        }
+        if (clickTimer) {
+          // 双击：跳转到对应内容（不展开上面）
+          clearTimeout(clickTimer);
+          clickTimer = null;
+          var offset = target.getBoundingClientRect().top + window.scrollY;
+          skipActivate = true;
+          window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: offset + 10
+          });
+          setTimeout(() => { skipActivate = false; }, 800);
+        } else {
+          // 单击：延时判定，期间无第二次点击则触发 toggle
+          clickTimer = setTimeout(() => {
+            clickTimer = null;
+            var child = element.querySelector(':scope > .nav-child');
+            if (!child) return;
+            if (element.classList.contains('active')) {
+              // 收起：移除该项及所有后代的 active，并收起所有后代 nav-child
+              element.classList.remove('active');
+              element.querySelectorAll('li.active').forEach(el => el.classList.remove('active'));
+              element.querySelectorAll('.nav-child').forEach(c => closeNav(c));
+            } else {
+              // 展开一层：仅该项 active（直接子级可见，更深层仍折叠）
+              element.classList.add('active');
+              openNav(child);
+              // 滚动 TOC 让该项位于顶部，使展开的子目录与下方标题都留在可视区
+              var offset = element.getBoundingClientRect().top - tocElement.getBoundingClientRect().top;
+              if (Math.abs(offset) > 5) {
+                window.anime({
+                  targets  : tocElement,
+                  duration : 200,
+                  easing   : 'linear',
+                  scrollTop: tocElement.scrollTop + offset - 10
+                });
+              }
+            }
+          }, 250);
+        }
       });
       return target;
     });
 
     var tocElement = document.querySelector('.post-toc-wrap');
+    // 展开/收起辅助：用 inline maxHeight = scrollHeight 驱动过渡（小值，过渡正常）
+    // 嵌套展开/收起时同步刷新祖先 nav-child 的高度，避免内容被 max-height 裁掉
+    function refreshAncestors(child) {
+      var p = child.parentNode;
+      while (p && !p.classList.contains('post-toc')) {
+        if (p.classList.contains('nav-child')) {
+          p.style.maxHeight = p.scrollHeight + 'px';
+        }
+        p = p.parentNode;
+      }
+    }
+    function openNav(child) {
+      var h = child.scrollHeight;
+      if (child.style.maxHeight === h + 'px' && child.style.opacity === '1') return;
+      child.style.maxHeight = child.style.maxHeight || '0px';
+      void child.offsetHeight;
+      anime({
+        targets : child,
+        maxHeight: h + 'px',
+        opacity : 1,
+        duration: 250,
+        easing  : 'easeOutQuad',
+        update  : () => refreshAncestors(child)
+      });
+    }
+    function closeNav(child) {
+      // 已折叠或不可见（如在已收起的祖先内）直接置 0，避免取 scrollHeight 把它再撑开造成空白
+      if (child.offsetHeight === 0) {
+        child.style.maxHeight = '0px';
+        child.style.opacity = '0';
+        child.style.paddingBottom = '0px';
+        return;
+      }
+      var h = child.offsetHeight;
+      child.style.maxHeight = h + 'px';
+      void child.offsetHeight;
+      anime({
+        targets : child,
+        maxHeight: '0px',
+        opacity : 0,
+        duration: 250,
+        easing  : 'easeOutQuad',
+        update  : () => refreshAncestors(child),
+        complete: () => { child.style.paddingBottom = '0px'; refreshAncestors(child); }
+      });
+    }
     function activateNavByIndex(target) {
       if (target.classList.contains('active-current')) return;
 
-      document.querySelectorAll('.post-toc .active').forEach(element => {
-        element.classList.remove('active', 'active-current');
+      // 只切换当前高亮项（active-current），不清除其他项的 active 类，
+      // 使已展开的目录在向下滚动时保持展开，仅"全部折叠"按钮或手动点击才会折叠。
+      document.querySelectorAll('.post-toc .active-current').forEach(element => {
+        element.classList.remove('active-current');
       });
       target.classList.add('active', 'active-current');
+      // 跳转（叶子单击/标题双击）触发：只高亮当前项，不展开上面路径
+      if (skipActivate) return;
+      // 展开当前项到根的路径（祖先 nav-child），不展开当前项自身的子目录，也不展开同级兄弟分支。
+      // 直接设高度而不用 openNav（避免多级 anime + refreshAncestors 相互覆盖产生空白）。
       var parent = target.parentNode;
       while (!parent.matches('.post-toc')) {
-        if (parent.matches('li')) parent.classList.add('active');
+        if (parent.matches('li')) {
+          parent.classList.add('active');
+          var child = parent.querySelector(':scope > .nav-child');
+          if (child) {
+            child.style.maxHeight = child.scrollHeight + 'px';
+            child.style.opacity = '1';
+            child.style.paddingBottom = '5px';
+          }
+        }
         parent = parent.parentNode;
       }
       // Scrolling to center active TOC element if TOC content is taller then viewport.
@@ -309,6 +424,32 @@ NexT.utils = {
       });
     }
     createIntersectionObserver(document.documentElement.scrollHeight);
+
+    // 全部展开 / 全部折叠 按钮
+    var expandAllBtn = document.querySelector('.post-toc-wrap .toc-expand-all');
+    var collapseAllBtn = document.querySelector('.post-toc-wrap .toc-collapse-all');
+    if (expandAllBtn) {
+      expandAllBtn.addEventListener('click', () => {
+        document.querySelectorAll('.post-toc li').forEach(element => {
+          element.classList.add('active');
+          var c = element.querySelector(':scope > .nav-child');
+          if (c) openNav(c);
+        });
+      });
+    }
+    if (collapseAllBtn) {
+      collapseAllBtn.addEventListener('click', () => {
+        // 直接全部置 0，不逐个 anime（避免多个收起动画 + refreshAncestors 相互覆盖产生空白）
+        document.querySelectorAll('.post-toc li').forEach(element => {
+          element.classList.remove('active', 'active-current');
+        });
+        document.querySelectorAll('.post-toc .nav-child').forEach(c => {
+          c.style.maxHeight = '0px';
+          c.style.opacity = '0';
+          c.style.paddingBottom = '0px';
+        });
+      });
+    }
   },
 
   hasMobileUA: function() {
