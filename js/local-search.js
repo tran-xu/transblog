@@ -167,15 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           let resultItem = '';
+          let searchHash = '#:' + encodeURIComponent(searchText);
 
           if (slicesOfTitle.length !== 0) {
-            resultItem += `<li><a href="${url}" class="search-result-title">${highlightKeyword(title, slicesOfTitle[0])}</a>`;
+            resultItem += `<li><a href="${url}${searchHash}" class="search-result-title">${highlightKeyword(title, slicesOfTitle[0])}</a>`;
           } else {
-            resultItem += `<li><a href="${url}" class="search-result-title">${title}</a>`;
+            resultItem += `<li><a href="${url}${searchHash}" class="search-result-title">${title}</a>`;
           }
 
           slicesOfContent.forEach(slice => {
-            resultItem += `<a href="${url}"><p class="search-result">${highlightKeyword(content, slice)}...</p></a>`;
+            resultItem += `<a href="${url}${searchHash}"><p class="search-result">${highlightKeyword(content, slice)}...</p></a>`;
           });
 
           resultItem += '</li>';

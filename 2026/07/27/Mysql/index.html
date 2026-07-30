@@ -1777,5 +1777,33 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
 });
 </script>
 
-</body>
+<script>
+(function(){
+  var m = location.hash.match(/^#:(.+)$/);
+  if(!m) return;
+  var kw = decodeURIComponent(m[1]);
+  var body = document.querySelector('.post-body');
+  if(!body) return;
+  var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+  var node, found = false;
+  while((node = walker.nextNode())){
+    var idx = node.nodeValue.toLowerCase().indexOf(kw.toLowerCase());
+    if(idx > -1){
+      try {
+        var range = document.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, idx + kw.length);
+        var mark = document.createElement('mark');
+        mark.style.background = '#ffcccc';
+        mark.style.color = '#cc0000';
+        mark.style.padding = '0 2px';
+        range.surroundContents(mark);
+        mark.scrollIntoView({behavior:'smooth', block:'center'});
+        found = true;
+      } catch(e) {}
+      break;
+    }
+  }
+})();
+</script></body>
 </html>
